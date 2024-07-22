@@ -13,6 +13,9 @@ std::string Road::getPlayerName() const {
     }
 }
 
+void Road::setPlayer(Player* p) {
+    player = p;
+}
 
 int Road::getId() const {
     return id;

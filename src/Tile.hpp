@@ -6,7 +6,7 @@
 #include "Vertex.hpp"
 #include "Road.hpp"
 
-enum ResourceType { WOOD, BRICK, SHEEP, WHEAT, ORE, DESERT };
+enum ResourceType { WOOD, BRICK, SHEEP, WHEAT, ORE };
 
 class Player; // Forward declaration to avoid circular dependency
 class Board;  // Forward declaration to avoid circular dependency

@@ -12,6 +12,7 @@ public:
     Road(int id);
     string getPlayerName() const;
     int getId() const;
+    void setPlayer(Player* p);
 };
 
 #endif // ROAD_HPP

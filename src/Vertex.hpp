@@ -19,6 +19,8 @@ public:
     std::vector<int> adjacentVertices; // קודקודים סמוכים
     std::string getPlayerName() const;
     Vertex(int idx); 
+    void setType(VertexType newType);
+    VertexType getType() const;
 };
 
 #endif // VERTEX_HPP
