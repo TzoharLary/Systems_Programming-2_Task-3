@@ -42,8 +42,12 @@ void Board::createRoads() {
 }
 
 void Board::createVertices() {
-    for (int i = 0; i < 54; ++i) { // נניח שיש 54 קודקודים
-        vertices.emplace(i, Vertex(i));
+    for (int i = 0; i < 54; ++i) { // assume 54 vertices
+        // We used emplace() instead of insert() because
+        // we want to construct the Vertex object in place
+        // and avoid copying it from a temporary object
+        // the next line creates a new Vertex object with the given id
+        vertices.emplace(i, Vertex(i)); 
     }
 }
 

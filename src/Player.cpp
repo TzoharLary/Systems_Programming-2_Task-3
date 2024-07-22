@@ -2,8 +2,10 @@
 #include "Board.hpp"
 #include <stdexcept>
 #include <iostream>
+#include <algorithm>
 using std::cout;
 using std::endl;
+using std::find;
 
 
 Player::Player(const std::string &name) : name(name), points(0) {}
@@ -55,7 +57,7 @@ void Player::placeSettlement(int vertexIndex, Board& board) {
     this->settlements.push_back(vertexIndex); // Add the settlement to the player's list of settlements
     cout << "Player " << name << " placed a settlement on vertex " << vertexIndex << endl;
     cout << "vertex.type: " << vertex.type << endl;
-    cout << "vertex.player: " << vertex.player << endl;
+    cout << "vertex.player: " << vertex.getPlayerName() << endl;
     cout << "vertex.occupied: " << vertex.occupied << endl;
     points += 1; // Settlement is worth 1 point
 
@@ -65,15 +67,22 @@ void Player::placeRoad(int roadIndex, Board& board) {
 
     cout << "roadIndex: " << roadIndex << endl;
     bool validRoad = false;
+    cout << "board.roads.at(roadIndex) " << board.roads.at(roadIndex).getId() << endl;
 
     if (roadIndex < 0 || roadIndex >= 72) {
     throw std::out_of_range("Invalid road index");
     }
 
+    //  if (std::find(board.roads.begin(), board.roads.end(), roadIndex) != board.roads.end()) {
+    //     // throw std::out_of_range("the problem is here");
+    //  }
+ 
     cout << "after first if" << endl;
 
-
-    Road& road = board.roads[roadIndex];
+    // המשתנה road 
+    // מקבל בעצם את הדרך באינדקס שהוזן כפרמטר
+    Road& road = board.roads.at(roadIndex);
+    // אני רוצה שהמשתנה שמצביע יקבל הפניה לid
 
     cout << "after define road to board.roads[roadIndex]" << endl;
 
@@ -88,6 +97,7 @@ void Player::placeRoad(int roadIndex, Board& board) {
     road.player = this;
 
     cout << "after road.player = this" << endl;
+    cout << "road player: " << road.getPlayerName() << endl;
     
     if (!validRoad) {
         cout << "the road is not valid" << endl;

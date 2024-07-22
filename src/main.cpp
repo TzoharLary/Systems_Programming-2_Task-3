@@ -13,6 +13,7 @@ int main() {
     Catan catan(p1, p2, p3);
     
     catan.ChooseStartingPlayer();  // Randomly choose starting player.
+    
     Board board = catan.getBoard(); // Get the board from the game.
 
     printf("after creating the board\n");
