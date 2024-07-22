@@ -52,6 +52,6 @@ $(BUILD_DIR)/%.o: $(TEST_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf $(BUILD_DIR) $(EXEC) $(TEST_EXEC)
+	rm -rf $(BUILD_DIR) $(CTN) $(TEST_EXEC)
 
 .PHONY: all test clean built_obj

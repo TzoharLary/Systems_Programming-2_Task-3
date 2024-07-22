@@ -11,21 +11,22 @@ int main() {
     Player p2("Yossi");
     Player p3("Dana");
     Catan catan(p1, p2, p3);
-    
+    printf("after activating catan\n");
+    // return 0;
+
     catan.ChooseStartingPlayer();  // Randomly choose starting player.
     
     Board board = catan.getBoard(); // Get the board from the game.
 
     printf("after creating the board\n");
-    int places1 = 20; // the num of the places of the settlement of the player
-    p1.placeSettlement(places1, board);
-    int road1 = 18;
-    p1.placeRoad(road1, board);
-    
-    int places2 = 23;
-    p1.placeSettlement(places2, board);
-    int road2 = 24;
-    p1.placeRoad(road2, board); 
+
+    p1.placeSettlement(20, board);
+    p1.placeRoad(18, board);
+    printf("after creating the first settlement and road of p1\n");
+    // int settlement2 = 23;
+    // p1.placeSettlement(settlement2, board);
+    // int road2 = 24;
+    // p1.placeRoad(road2, board); 
 
    
     

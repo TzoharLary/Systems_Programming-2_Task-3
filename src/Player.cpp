@@ -79,26 +79,25 @@ void Player::placeRoad(int roadIndex, Board& board) {
  
     cout << "after first if" << endl;
 
-    // המשתנה road 
-    // מקבל בעצם את הדרך באינדקס שהוזן כפרמטר
     Road& road = board.roads.at(roadIndex);
-    // אני רוצה שהמשתנה שמצביע יקבל הפניה לid
 
     cout << "after define road to board.roads[roadIndex]" << endl;
 
-    cout << "road.player: " << road.player << endl;
+    cout << "road.player before check: " << road.getPlayerName() << endl;
     
     if (road.player != nullptr) {
         throw std::runtime_error("This road is already occupied by another player");
     }
-
-    cout << "after second if" << endl;
+    cout << "road.player after check: " << road.getPlayerName() << endl;
 
     road.player = this;
 
     cout << "after road.player = this" << endl;
-    cout << "road player: " << road.getPlayerName() << endl;
-    
+    cout << "road.player after road.player = this: " << road.getPlayerName() << endl;
+
+    // TODO: add adjacent roads check for valid built road
+    validRoad = true;
+
     if (!validRoad) {
         cout << "the road is not valid" << endl;
         throw std::out_of_range("Invalid road index");
@@ -106,7 +105,7 @@ void Player::placeRoad(int roadIndex, Board& board) {
 
     cout << "after third if" << endl;
 
-    std::cout << "Player " << name << " placed a road on road " << roadIndex << std::endl;
+    cout << name << " placed a road on road " << roadIndex << endl;
 }
 
 
