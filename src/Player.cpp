@@ -11,38 +11,38 @@ Player::Player(const std::string &name) : name(name), points(0) {}
 
 void Player::placeSettlement(int vertexIndex, Board& board) {
 
-    printf("vertexIndex: %d\n", vertexIndex);
+  //  printf("vertexIndex: %d\n", vertexIndex);
    
     // Check if the vertexIndex is found in the map and exists
     if (board.vertices.find(vertexIndex) == board.vertices.end()) {
         throw std::out_of_range("Invalid vertex index");
     }
-    printf("after first if\n");
+ //   printf("after first if\n");
 
     // Check if the player has more than 5 settlements
     if (settlements.size() >= 5) {
         throw std::runtime_error("You cannot have more than 5 settlements.");
     }
-    printf("after second if\n");
+  //  printf("after second if\n");
 
     // Get the vertex object from the map
     Vertex& vertex = board.vertices.at(vertexIndex); // Using at() instead of []
 
-    printf("after define vertex to board.vertices.at(vertexIndex)\n");
+  //  printf("after define vertex to board.vertices.at(vertexIndex)\n");
 
     // check if the vertex is occupied by another player
     if (vertex.occupied) {
         throw std::runtime_error("There is already a settlement on this vertex");
     }
 
-    printf("after third if\n");
+  //  printf("after third if\n");
 
     // Check if there is a settlement on an adjacent vertex
     // For loop that iterates over the adjacent vertices of the current vertex
     // and checks if there is a settlement on any of them
     for (int adjacentVertex : vertex.adjacentVertices) {
-        printf("adjacentVertex: %d\n", adjacentVertex);
-        printf("adjacentVertex.type: %d\n", board.vertices.at(adjacentVertex).type);
+    //    printf("adjacentVertex: %d\n", adjacentVertex);
+      //  printf("adjacentVertex.type: %d\n", board.vertices.at(adjacentVertex).type);
         if (board.vertices.at(adjacentVertex).occupied) { // Using at() instead of []
             throw std::runtime_error("There is a settlement on an adjacent vertex");
         }
@@ -54,11 +54,12 @@ void Player::placeSettlement(int vertexIndex, Board& board) {
     vertex.type = SETTLEMENT; // Set the type of the vertex to a settlement
     this->settlements.push_back(vertexIndex); // Add the settlement to the player's list of settlements
     cout << "Player " << name << " placed a settlement on vertex " << vertexIndex << endl;
+    cout << "vertex.type: " << vertex.type << endl;
+    cout << "vertex.player: " << vertex.player << endl;
+    cout << "vertex.occupied: " << vertex.occupied << endl;
     points += 1; // Settlement is worth 1 point
 
 }
-
-
 
 void Player::placeRoad(int roadIndex, Board& board) {
 
@@ -75,6 +76,8 @@ void Player::placeRoad(int roadIndex, Board& board) {
     Road& road = board.roads[roadIndex];
 
     cout << "after define road to board.roads[roadIndex]" << endl;
+
+    cout << "road.player: " << road.player << endl;
     
     if (road.player != nullptr) {
         throw std::runtime_error("This road is already occupied by another player");

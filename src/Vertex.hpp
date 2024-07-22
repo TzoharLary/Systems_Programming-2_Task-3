@@ -2,6 +2,9 @@
 #define VERTEX_HPP
 
 #include <vector>
+#include <string>
+
+
 
 class Player;
 
@@ -14,8 +17,8 @@ public:
     Player* player;                      // מזהה השחקן שתפס את הקודקוד
     VertexType type;                 // סוג התפוסה (יישוב או עיר)
     std::vector<int> adjacentVertices; // קודקודים סמוכים
-
-Vertex(int idx); 
+    std::string getPlayerName() const;
+    Vertex(int idx); 
 };
 
 #endif // VERTEX_HPP
