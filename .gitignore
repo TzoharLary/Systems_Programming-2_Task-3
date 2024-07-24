@@ -1,0 +1,30 @@
+# Ignore object files and binaries and libraries
+*.o
+*.exe
+*.out
+*.a
+*.so
+*.dylib
+catan
+
+# Ignore build directories
+build/
+bin/
+obj/
+
+# Ignore core dump files
+core
+
+# Ignore icon files
+icon
+src/icon
+
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+*.swp
+*~
+
+# Ignore Mac-specific files
+.DS_Store

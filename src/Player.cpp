@@ -140,15 +140,16 @@ void Player::placeRoad(int roadIndex, Board& board) {
 
     Road& road = board.roads.at(roadIndex);
 
-    if (road.player != nullptr) {
-        throw runtime_error("This road is already occupied by another player");
+    if (road.isOccupied()) {
+        throw runtime_error("This road is already occupied by " + road.getPlayerName());
     }
     // TODO: add adjacent roads check for valid built road
 
     if(this->getPoints() > 2){
         Buy(Player::BuyType::ROAD);
     }
-    
+    // Road& road = board.roads.at(roadIndex);
+
     road.setPlayer(this);
 
     validRoad = true;

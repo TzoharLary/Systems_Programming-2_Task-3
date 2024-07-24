@@ -25,7 +25,9 @@ Validator::Validator(const string& className, const string& functionName, void* 
 void Validator::validate() {
     if (className == "Player") {
         validatePlayer();
-    } else if (className == "Board") {
+    } 
+    /*
+     else if (className == "Board") {
         validateBoard();
     } else if (className == "Road") {
         validateRoad();
@@ -34,6 +36,8 @@ void Validator::validate() {
     } else if (className == "Vertex") {
         validateVertex();
     }
+    */
+   
     // Add more classes as needed
 }
 
@@ -67,12 +71,19 @@ void Validator::validatePlayer() {
 
         Road& road = boardPtr->roads.at(index);
 
-        bool validRoad = true; // יש לקבוע validRoad לפי הקונטקסט שלך
+        // Check if the road is already occupied
+        if (road.isOccupied()) {
+            throw std::runtime_error("The road is already occupied by " + road.getPlayerName());
+        }
+
+
+        bool validRoad = true; 
 
         if (!validRoad) {
             std::cout << "the road is not valid" << std::endl;
             throw std::out_of_range("Invalid road index");
         }
+
     } else if (functionName == "upgradeSettlementToCity") {
         if (boardPtr->vertices.find(index) == boardPtr->vertices.end()) {
             throw std::out_of_range("Invalid vertex index");
@@ -89,7 +100,7 @@ void Validator::validatePlayer() {
         }
     }
 }
-
+/*
 void Validator::validateBoard() {
     Board* board = static_cast<Board*>(obj);
     // Add Board specific validations
@@ -109,3 +120,4 @@ void Validator::validateVertex() {
     Vertex* vertex = static_cast<Vertex*>(obj);
     // Add Vertex specific validations
 }
+*/

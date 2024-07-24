@@ -22,10 +22,13 @@ private:
     void* board; // פרמטר נוסף לבדיקת לוח
     void validate();
     void validatePlayer();
+    /*
     void validateBoard();
     void validateRoad();
     void validateTile();
     void validateVertex();
+    */
+    
 };
 
 #endif // VALIDATOR_H
