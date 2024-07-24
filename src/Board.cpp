@@ -71,6 +71,27 @@ void Board::addTile(ResourceType resource, int number, const std::vector<Vertex>
     tiles.push_back(newTile);
 }
 
+vector<Tile*> Board::getTilesForVertex(int vertexIndex) {
+
+    vector<Tile*> tilesForVertex;
+    // Iterate over all the tiles in the board
+    for (Tile& tile : tiles) {
+        // Iterate over all the vertices of the tile and check if the vertexIndex matches
+        // the cast to int is necessary because the size() method returns an unsigned integer
+        for (int i = 0; i < static_cast<int>(tile.vertices.size()); ++i) {
+            // create a pointer to the current vertex in the tile
+            Vertex* vertex = tile.getVertex(i);
+            // Check if the vertex is not null and the index matches the vertexIndex
+            if (vertex->getId() == vertexIndex) {
+                tilesForVertex.push_back(&tile);
+                break;
+            }
+        }
+    }
+    return tilesForVertex;
+}
+
+
 Tile Board::getTile(int index) const {
     if (index < 0 || index >= static_cast<int>(tiles.size())) {
         throw std::out_of_range("Invalid tile index");

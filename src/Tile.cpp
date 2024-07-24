@@ -3,11 +3,25 @@
 #include "Board.hpp"
 
 
-// The constructor for the Tile class
-Tile::Tile(ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles)
-    : resource(resource), number(number), vertices(vertices), adjacentTiles(adjacentTiles) {}
+/* The constructor for the Tile class
     // The const std::vector<Vertex>& vertices indicates that the vector vertices is passed to the function by reference and will not be modified within the function. This saves memory and improves performance by avoiding unnecessary copying.
     // The const std::vector<int>& adjacentTiles indicates that the vector adjacentTiles is passed to the function by reference and will not be modified within the function. This saves memory and improves performance by avoiding unnecessary copying.
+*/
+Tile::Tile(ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles)
+    : resource(resource), number(number), vertices(vertices), adjacentTiles(adjacentTiles) {}
+
+// The getVertex function returns a pointer to the Vertex object at the specified index within the vertices vector of the Tile object.
+Vertex* Tile::getVertex(int index) const {
+    if (index < 0 || index >= static_cast<int>(vertices.size())) {
+        throw std::out_of_range("Invalid vertex index");
+    }
+    return const_cast<Vertex*>(&vertices.at(index));
+}
+
+// The getResource function returns the resource type of the tile.
+ResourceType Tile::getResource() const {
+    return resource;
+}
 
 void Tile::distributeResources(int rolledNumber, Board& board) {
     // auto& tile: Indicates that the variable tile is a reference to the original variable within the vector board.tiles, preventing unnecessary copying of the tile.
@@ -16,13 +30,12 @@ void Tile::distributeResources(int rolledNumber, Board& board) {
         if (tile.number != rolledNumber) {
             continue;
         }
-        //asd
         for (const auto& vertex : tile.vertices) {
             if (vertex.player != nullptr) {
                 Player* player = vertex.player;
-                if (vertex.type == SETTLEMENT) {
+                if (vertex.getType() == Vertex::VertexType::SETTLEMENT) {
                     player->addResource(tile.resource, 1);
-                } else if (vertex.type == CITY) {
+                } else if (vertex.getType() == Vertex::VertexType::CITY) {
                     player->addResource(tile.resource, 2);
                 }
             }
