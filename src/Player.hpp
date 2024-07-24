@@ -26,7 +26,7 @@ public:
     int points;
     map<ResourceType, int> resources; 
     vector<int> settlements; // List of settlement vertex indices
-    vector<int> Citys; // List of Citys vertex indices
+    int Citys; // List of Citys vertex indices
     Player(const string &name); 
     void placeSettlement(int vertexIndex, Board &board); // שונה לקבל אינדקס של קודקוד
     void placeRoad(int roadIndex, Board &board); // שונה לקבל אינדקס של דרך
@@ -35,6 +35,10 @@ public:
     void removeResource(ResourceType resource, int amount); // Remove resources from the player
     string getName() const;
     int getPoints() const;
+    int getNumOfCity() const;
+    void incrementNumOfCity();
+    void incrementPoints();
+    
 
 
 private:

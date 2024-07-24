@@ -24,11 +24,11 @@ Board Catan::getBoard() const {
 }
 
 void Catan::printWinner() const {
-    if (player1.getPoints() >= 10) {
+    if (player1.getPoints() >= 100) {
         std::cout << "Winner: " << player1.getName() << std::endl;
-    } else if (player2.getPoints() >= 10) {
+    } else if (player2.getPoints() >= 100) {
         std::cout << "Winner: " << player2.getName() << std::endl;
-    } else if (player3.getPoints() >= 10) {
+    } else if (player3.getPoints() >= 100) {
         std::cout << "Winner: " << player3.getName() << std::endl;
     } else {
         std::cout << "No winner yet." << std::endl;

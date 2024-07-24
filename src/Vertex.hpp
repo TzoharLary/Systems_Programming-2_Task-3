@@ -29,6 +29,7 @@ public:
     VertexType getType() const;
     int getId() const;
     void setPlayer(Player* p);
+    
 
 };
 

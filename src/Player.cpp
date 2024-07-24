@@ -3,7 +3,7 @@
 #include "Validator.hpp"
 
 
-Player::Player(const string &name) : name(name), points(0) {
+Player::Player(const string &name) : name(name), points(0), Citys(0) {
     for (int i = WOOD; i <= ORE; ++i) {
         resources[static_cast<ResourceType>(i)] = 0;
     }
@@ -108,45 +108,27 @@ void Player::placeSettlement(int vertexIndex, Board& board) {
     cout << name << " placed a settlement on vertex " << vertexIndex << endl;
 }
 
-void Player::placeRoad(int roadIndex, Board& board) {
-    
+void Player::placeRoad(int roadIndex, Board& board) { 
     Validator validator("Player", "placeRoad", this, roadIndex, board);
     if (!validator.isValid()) {
         return;
     }   
-    // bool variable for know later if the index of the road is valid
-    bool validRoad = false;
-
-    if (roadIndex < 0 || roadIndex >= 72) {
-    throw out_of_range("Invalid road index");
-    }
-
     Road& road = board.roads.at(roadIndex);
-
-    if (road.isOccupied()) {
-        throw runtime_error("This road is already occupied by " + road.getPlayerName());
-    }
-
     if(this->getPoints() > 2){
         Buy(Player::BuyType::ROAD);
     }
-    // Road& road = board.roads.at(roadIndex);
-
-    road.setPlayer(this);
-
-    validRoad = true;
-
-    if (!validRoad) {
-        cout << "the road is not valid" << endl;
-        throw out_of_range("Invalid road index");
-    }
-
+    road.setPlayer(this); // Set the player of the road to the current player
     cout << name << " placed a road on road " << roadIndex << endl;
 }
 
 void Player::upgradeSettlementToCity(int vertexIndex, Board& board) {
+    Validator validator("Player", "upgradeSettlementToCity", this, vertexIndex, board);
+    if (!validator.isValid()) {
+        return;
+    }  
+ 
+    /*
     // Check if the specified vertex index exists in the board's vertices map
-    // if (board.vertices.find(vertexIndex) == board.vertices.end()) {
     if (vertexIndex < 0 || vertexIndex >= static_cast<int>(board.vertices.size())){    
         // If the vertex index does not exist, throw an out_of_range exception
         throw std::out_of_range("Invalid vertex index");
@@ -156,23 +138,25 @@ void Player::upgradeSettlementToCity(int vertexIndex, Board& board) {
     if (Citys.size() >= 4) {
         throw std::runtime_error("You cannot have more than 5 settlements.");
     }
-    
+    */
+
     // Access the vertex by index, assuming existence is already verified
     // because vertex is alias so we will get to the method with . and not ->
     Vertex& vertex = board.vertices.at(vertexIndex);
 
     // Check if the vertex is not occupied, if it's not owned by the current player, or if it's not a settlement
-    if (!vertex.occupied || vertex.player != this || vertex.getType() == Vertex::VertexType::SETTLEMENT) {
-        // If any condition is true, throw a runtime_error indicating the action cannot be performed
-        throw std::runtime_error("You can only upgrade your own settlements to cities.");
-    }
+    // if (vertex.getPlayerName() != this.getName() || vertex.getType() == Vertex::VertexType::SETTLEMENT) {
+    //     // If any condition is true, throw a runtime_error indicating the action cannot be performed
+    //     throw std::runtime_error("You can only upgrade your own settlements to cities.");
+    // }
 
     // try to buy
     this->Buy(Player::BuyType::CITY);
     // Change the vertex type to CITY, indicating an upgrade
     vertex.setType(Vertex::VertexType::CITY);
     // Increment points by 1. This assumes a settlement is worth 1 point and upgrading to a city makes it worth 2 points in total
-    points += 1;
+    this->incrementNumOfCity();
+    this->incrementPoints();
 
     // Output a message indicating the player has upgraded a settlement to a city at the specified vertex
     std::cout << "Player " << name << " upgraded a settlement to a city on vertex " << vertexIndex << std::endl;
@@ -199,4 +183,16 @@ string Player::getName() const {
 
 int Player::getPoints() const {
     return points;
+}
+
+int Player::getNumOfCity() const {
+    return Citys;
+}
+
+void Player::incrementNumOfCity() {
+    Citys++;
+}
+
+void Player::incrementPoints() {
+    points++;
 }

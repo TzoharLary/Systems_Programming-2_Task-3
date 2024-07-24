@@ -2,6 +2,8 @@
 #define ROAD_HPP
 #include <string>
 using std::string;
+#include <vector>
+using std::vector;
 
 class Player;
 
