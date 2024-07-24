@@ -100,11 +100,11 @@ void Validator::validatePlayer() {
             valid = false;
             throw std::runtime_error("The road is already occupied by " + road.getPlayerName());
         }
+        // Check if the player has any settlements
         if (player->settlements.size() < 0) {
             valid = false;
             throw std::runtime_error("You must have at least one settlement to build a road.");
         }
-
         // if condition to check if the road is near a settlement that belongs to the player
         bool hasPlayerSettlement = false;
         for (int vertexIndex : road.getBetweenVertices()) {
@@ -114,9 +114,20 @@ void Validator::validatePlayer() {
                 break;
             }
         }
-        if (!hasPlayerSettlement) {
+       
+        // if condition to check if the road is near another road that belongs to the player
+        bool hasToadNearRoad = false;
+        for (int roadIndex : road.getAdjacentRoads()) {
+            Road& adjacentRoad = boardRef.roads.at(roadIndex);
+            if (adjacentRoad.isOccupied() && adjacentRoad.getPlayerName() == player->getName()) {
+                hasToadNearRoad = true;
+                break;
+            }
+        }
+        if (!hasPlayerSettlement && !hasToadNearRoad) {
+            cout << "the road: " << road.getId() << " has no settlement or road near it" << endl;
             valid = false;
-            throw std::runtime_error("You must build a road near one of your settlements.");
+            throw std::runtime_error("You must build a road near one of your settlements or near one of your roads.");
         }
         
 

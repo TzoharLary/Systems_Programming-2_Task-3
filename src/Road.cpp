@@ -18,10 +18,17 @@ std::vector<int> Road::getBetweenVertices() const {
     return betweenVertices;
 }
 
-void Road::setBetweenVertices(const std::vector<int>& vertices) {
+void Road::setBetweenVertices(const vector<int>& vertices) {
     betweenVertices = vertices;
 }
 
+vector<int> Road::getAdjacentRoads() const {
+    return adjacentRoads;
+}
+
+void Road::setAdjacentRoads(const vector<int>& roads) {
+    adjacentRoads = roads;
+}
 
 bool Road::isOccupied() const {
     return player != nullptr;

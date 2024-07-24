@@ -16,15 +16,18 @@ public:
     int id;        
     Player* player;     
     vector<int> betweenVertices; 
+    vector<int> adjacentRoads;
     Road(int id);
     // get the vertices between the road
     vector<int> getBetweenVertices() const;
     void setBetweenVertices(const vector<int>& vertices);
+    vector<int> getAdjacentRoads() const;
+    void setAdjacentRoads(const vector<int>& roads);
     string getPlayerName() const;
     int getId() const;
     void setPlayer(Player* p);
     bool isOccupied() const;
-    // void setOccupied(bool isOccupied);
+
 };
 
 #endif // ROAD_HPP

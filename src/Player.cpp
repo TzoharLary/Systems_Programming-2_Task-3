@@ -126,30 +126,9 @@ void Player::upgradeSettlementToCity(int vertexIndex, Board& board) {
     if (!validator.isValid()) {
         return;
     }  
- 
-    /*
-    // Check if the specified vertex index exists in the board's vertices map
-    if (vertexIndex < 0 || vertexIndex >= static_cast<int>(board.vertices.size())){    
-        // If the vertex index does not exist, throw an out_of_range exception
-        throw std::out_of_range("Invalid vertex index");
-    }
-
-    // Check if the player has more than 5 settlements
-    if (Citys.size() >= 4) {
-        throw std::runtime_error("You cannot have more than 5 settlements.");
-    }
-    */
-
     // Access the vertex by index, assuming existence is already verified
     // because vertex is alias so we will get to the method with . and not ->
     Vertex& vertex = board.vertices.at(vertexIndex);
-
-    // Check if the vertex is not occupied, if it's not owned by the current player, or if it's not a settlement
-    // if (vertex.getPlayerName() != this.getName() || vertex.getType() == Vertex::VertexType::SETTLEMENT) {
-    //     // If any condition is true, throw a runtime_error indicating the action cannot be performed
-    //     throw std::runtime_error("You can only upgrade your own settlements to cities.");
-    // }
-
     // try to buy
     this->Buy(Player::BuyType::CITY);
     // Change the vertex type to CITY, indicating an upgrade
@@ -157,7 +136,6 @@ void Player::upgradeSettlementToCity(int vertexIndex, Board& board) {
     // Increment points by 1. This assumes a settlement is worth 1 point and upgrading to a city makes it worth 2 points in total
     this->incrementNumOfCity();
     this->incrementPoints();
-
     // Output a message indicating the player has upgraded a settlement to a city at the specified vertex
     std::cout << "Player " << name << " upgraded a settlement to a city on vertex " << vertexIndex << std::endl;
 }

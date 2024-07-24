@@ -21,13 +21,13 @@ int main() {
     p1.placeRoad(0, board);
     p1.placeSettlement(10, board);
     p1.placeRoad(9, board);
+    p1.placeRoad(2, board);
 
     for (ResourceType r : {ResourceType::ORE, ResourceType::BRICK, ResourceType::WOOD, ResourceType::WHEAT, ResourceType::SHEEP}) {
         p1.addResource(r, 100);
         p2.addResource(r, 100);
         p3.addResource(r, 100);
     }
-    p1.upgradeSettlementToCity(2, board);
 
 
 
