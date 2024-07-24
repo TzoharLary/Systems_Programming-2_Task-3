@@ -9,6 +9,17 @@ Player::Player(const string &name) : name(name), points(0), Citys(0) {
     }
 }
 
+void Player::status() const {
+    cout << "This is the status of: " << getName() << endl;
+    // cout << "Points: " << getPoints() << endl;
+    // cout << "Number of Cities: " << getNumOfCity() << endl;
+    // cout << "Number of Settlements: " << settlements.size() << endl;
+    cout << "Resources:" << endl;
+    for (const auto& resource : getResources()) {
+        cout << "  " << resourceTypeToString(resource.first) << ": " << resource.second << endl;
+    }
+}
+
 void Player::Buy(BuyType type) {
     // There is no problem creating a map with each call
     // to the function because the local object cost is created
@@ -64,7 +75,7 @@ bool Player::checkResources(const map<ResourceType, int>& cost) {
     return hasAllResources;
 }
 
-string Player::resourceTypeToString(ResourceType type) {
+string Player::resourceTypeToString(ResourceType type) const {
     switch(type) {
         case WOOD: return "Wood";
         case BRICK: return "Brick";
@@ -140,16 +151,40 @@ void Player::upgradeSettlementToCity(int vertexIndex, Board& board) {
     std::cout << "Player " << name << " upgraded a settlement to a city on vertex " << vertexIndex << std::endl;
 }
 
+void Player::Trade(Player& player, ResourceType give, int giveAmount, ResourceType take, int takeAmount) {
+    // check if the player has the resources to trade
+    std::map<ResourceType, int> cost = { {give, giveAmount} };
+    if (!checkResources(cost)) {
+        throw std::runtime_error("Not enough resources to trade.");
+    }
+
+    // remove the resources from the player
+    this->removeResource(give, giveAmount);
+
+    // add the resources to the other player
+    player.addResource(give, giveAmount);
+
+    // remove the resources from the other player
+    player.removeResource(take, takeAmount);
+
+    // add the resources to the player
+    this->addResource(take, takeAmount);
+}
+
 void Player::addResource(ResourceType resource, int amount) {
-    resources[resource] += amount; 
+    map<ResourceType, int> currentResources = getResources();
+    currentResources[resource] += amount;
+    setResources(currentResources);
 }
 
 void Player::removeResource(ResourceType resource, int amount) {
-    if (resources[resource] >= amount) {
-        resources[resource] -= amount;
-        if (resources[resource] == 0) {
-            resources.erase(resource);
+    map<ResourceType, int> currentResources = getResources();
+    if (currentResources[resource] >= amount) {
+        currentResources[resource] -= amount;
+        if (currentResources[resource] == 0) {
+            currentResources.erase(resource);
         }
+        setResources(currentResources);
     } else {
         throw std::runtime_error("Not enough resources");
     }
@@ -173,4 +208,14 @@ void Player::incrementNumOfCity() {
 
 void Player::incrementPoints() {
     points++;
+}
+
+// Getter for resources
+map<ResourceType, int> Player::getResources() const {
+    return resources;
+}
+
+// Setter for resources
+void Player::setResources(const map<ResourceType, int>& newResources) {
+    resources = newResources;
 }

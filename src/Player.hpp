@@ -38,14 +38,16 @@ public:
     int getNumOfCity() const;
     void incrementNumOfCity();
     void incrementPoints();
-    
-
+    void Trade(Player& player, ResourceType give, int giveAmount, ResourceType take, int takeAmount);
+    map<ResourceType, int> getResources() const;
+    void setResources(const map<ResourceType, int>& newResources);
+    void status() const;
 
 private:
     enum BuyType { ROAD, SETTLEMENT, CITY, DEVELOPMENT_CARD };
     // Helper function to check and print missing resources
     bool checkResources(const map<ResourceType, int>& cost);
-    string resourceTypeToString(ResourceType type);
+    string resourceTypeToString(ResourceType type) const;
     void Buy(BuyType type);
 
 };
