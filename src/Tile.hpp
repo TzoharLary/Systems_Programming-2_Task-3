@@ -14,15 +14,16 @@ class Board;  // Forward declaration to avoid circular dependency
 
 class Tile {
 public:
+    int id; // tile id
     ResourceType resource;
     int number;
-    // std::map<int, Vertex> settlements; // hold the settlements that are on the tile
     vector<Vertex> vertices; // hold the vertices that are on the tile
-    vector<int> adjacentTiles; //  hold the adjacent tiles to the tile
-    Tile(ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles);
+    vector<int> adjacentTiles; //  hold the number of the adjacent tiles id to the tile
+    Tile(int id, ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles);
     Vertex* getVertex(int index) const;
     void distributeResources(int rolledNumber, Board& board);
     ResourceType getResource() const;
+    int getId() const;
 };
 
 #endif // TILE_HPP

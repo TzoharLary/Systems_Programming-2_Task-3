@@ -77,42 +77,16 @@ string Player::resourceTypeToString(ResourceType type) {
 
 void Player::placeSettlement(int vertexIndex, Board& board) {
     
-    // Check if the vertexIndex is found in the map and exists
-    if (board.vertices.find(vertexIndex) == board.vertices.end()) {
-        throw out_of_range("Invalid vertex index");
-    }
-
-    // Check if the player has more than 5 settlements
-    // Validator validator("Player", "placeSettlement", this);
-
-    // if (settlements.size() >= 5) {
-    //     throw std::runtime_error("You cannot have more than 5 settlements.");
-    // }
-
+    Validator validator("Player", "placeSettlement", this, vertexIndex, board);
+    if (!validator.isValid()) {
+        return;
+    }   
     // Get the vertex object from the map
     Vertex& vertex = board.vertices.at(vertexIndex); // Using at() instead of []
-
-    // check if the vertex is occupied by another player
-    if (vertex.occupied) {
-        throw runtime_error("There is already a settlement on this vertex");
-    }
-
-    /*   Check if there is a settlement on an adjacent vertex
-         For loop that iterates over the adjacent vertices of the current vertex
-         and checks if there is a settlement on any of them
-    */ 
-    for (int adjacentVertex : vertex.adjacentVertices) {
-        if (board.vertices.at(adjacentVertex).occupied) { 
-            throw runtime_error("There is a settlement on an adjacent vertex");
-        }
-    }
 
     if(this->getPoints() > 2){
          Buy(Player::BuyType::SETTLEMENT);
     }
-    // i need to add resources to the player so i will check
-    // the resource of the tile of the vertex using the getTilesForVertex method
-    
     else{
         // Get the tiles that are associated with the vertex that we built the settlement on
         vector<Tile*> tilesForThisVertex = board.getTilesForVertex(vertexIndex);
@@ -122,8 +96,12 @@ void Player::placeSettlement(int vertexIndex, Board& board) {
         }
     }
 
-    vertex.occupied = true; // From now the vertex will be occupied by the player
-    vertex.player = this; // Save the pointer to the player
+    // CHECK IF I CAN REMOVE THIS LINES
+    // vertex.occupied = true; // From now the vertex will be occupied by the player
+    // vertex.player = this; // Save the pointer to the player
+
+
+    vertex.setPlayer(this); // Set the player of the vertex to the current player
     vertex.setType(Vertex::VertexType::SETTLEMENT); // Set the type of the vertex to a settlement
     this->settlements.push_back(vertexIndex); // Add the settlement to the player's list of settlements
     points += 1; // Settlement is worth 1 point
@@ -131,6 +109,11 @@ void Player::placeSettlement(int vertexIndex, Board& board) {
 }
 
 void Player::placeRoad(int roadIndex, Board& board) {
+    
+    Validator validator("Player", "placeRoad", this, roadIndex, board);
+    if (!validator.isValid()) {
+        return;
+    }   
     // bool variable for know later if the index of the road is valid
     bool validRoad = false;
 
@@ -143,7 +126,6 @@ void Player::placeRoad(int roadIndex, Board& board) {
     if (road.isOccupied()) {
         throw runtime_error("This road is already occupied by " + road.getPlayerName());
     }
-    // TODO: add adjacent roads check for valid built road
 
     if(this->getPoints() > 2){
         Buy(Player::BuyType::ROAD);
@@ -164,7 +146,8 @@ void Player::placeRoad(int roadIndex, Board& board) {
 
 void Player::upgradeSettlementToCity(int vertexIndex, Board& board) {
     // Check if the specified vertex index exists in the board's vertices map
-    if (board.vertices.find(vertexIndex) == board.vertices.end()) {
+    // if (board.vertices.find(vertexIndex) == board.vertices.end()) {
+    if (vertexIndex < 0 || vertexIndex >= static_cast<int>(board.vertices.size())){    
         // If the vertex index does not exist, throw an out_of_range exception
         throw std::out_of_range("Invalid vertex index");
     }

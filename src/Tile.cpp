@@ -7,8 +7,8 @@
     // The const std::vector<Vertex>& vertices indicates that the vector vertices is passed to the function by reference and will not be modified within the function. This saves memory and improves performance by avoiding unnecessary copying.
     // The const std::vector<int>& adjacentTiles indicates that the vector adjacentTiles is passed to the function by reference and will not be modified within the function. This saves memory and improves performance by avoiding unnecessary copying.
 */
-Tile::Tile(ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles)
-    : resource(resource), number(number), vertices(vertices), adjacentTiles(adjacentTiles) {}
+Tile::Tile(int id, ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles)
+    : id(id), resource(resource), number(number), vertices(vertices), adjacentTiles(adjacentTiles) {}
 
 // The getVertex function returns a pointer to the Vertex object at the specified index within the vertices vector of the Tile object.
 Vertex* Tile::getVertex(int index) const {
@@ -16,6 +16,10 @@ Vertex* Tile::getVertex(int index) const {
         throw std::out_of_range("Invalid vertex index");
     }
     return const_cast<Vertex*>(&vertices.at(index));
+}
+
+int Tile::getId() const {
+    return id;
 }
 
 // The getResource function returns the resource type of the tile.

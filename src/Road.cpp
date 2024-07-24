@@ -13,15 +13,15 @@ std::string Road::getPlayerName() const {
         return "No player";
     }
 }
-/*
-// function to set the occupied status of the road
-void Road::setOccupied(bool isOccupied) {
-    if (this->Occupied && this->player) {
-        throw std::runtime_error("This road is already occupied by another player: " + this->getPlayerName());
-    }
-    this->Occupied = isOccupied;
+
+std::vector<int> Road::getBetweenVertices() const {
+    return betweenVertices;
 }
-*/
+
+void Road::setBetweenVertices(const std::vector<int>& vertices) {
+    betweenVertices = vertices;
+}
+
 
 bool Road::isOccupied() const {
     return player != nullptr;

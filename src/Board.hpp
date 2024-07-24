@@ -6,8 +6,13 @@
 #include "Tile.hpp"
 #include "Vertex.hpp"
 #include "Road.hpp"
+#include <iostream>
 using std::vector;
 using std::map;
+using std::ostream_iterator;
+using std::cout;
+using std::endl;
+using std::copy;
 
 class Player;
 
@@ -16,18 +21,27 @@ private:
 
     void createRoads(); 
     void createVertices();
+    void createTiles();
     void setup();
+    template <typename T>
+    void printVector(const vector<T>& vec) const {
+        copy(vec.begin(), vec.end(), ostream_iterator<T>(cout, " "));
+        cout << "]" << endl;
+    }
+
 
 public:
     Board();
     vector<Tile> tiles;
-    map<int, Vertex> vertices;
+    vector<Vertex> vertices;
     vector<Road> roads;
     vector<Tile*> getTilesForVertex(int vertexIndex);
     Tile getTile(int index) const;
-    void addTile(ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles);
+    void addTile(int id, ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles);
     vector<int> getAdjacentTiles(int tileIndex) const;
     vector<int> getAdjacentVertices(int vertexIndex) const;
+    void printAdjacent(int index, bool isTile) const;
+    
 };
 
 #endif // BOARD_HPP

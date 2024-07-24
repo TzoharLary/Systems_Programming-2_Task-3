@@ -17,17 +17,39 @@ int main() {
     
     Board board = catan.getBoard(); // Get the board from the game.
 
+    p1.placeSettlement(0, board);
+    p1.placeRoad(10, board);
+    p2.placeRoad(10, board);
 
-    p1.placeSettlement(20, board);
-    p1.placeRoad(18, board);
+
+
+    /*
     printf("after creating the first settlement and road of p1\n");
+    p1.placeSettlement(2, board);
+    printf("after creating the second settlement of p1\n");
+    for (ResourceType r : {ResourceType::ORE, ResourceType::BRICK, ResourceType::WOOD, ResourceType::WHEAT, ResourceType::SHEEP}) {
+        p1.addResource(r, 20);
+    }
+    board.printAdjacent(0, false);
+    board.printAdjacent(0, true);
+    p2.placeSettlement(3, board);
+
+    printf("after creating the third settlement of p1\n");
+    p1.placeSettlement(6, board);
+    printf("after creating the fourth settlement of p1\n");
+    p1.placeSettlement(14, board);
+    printf("after creating the fifth settlement of p1\n");
+    p1.placeSettlement(25, board);
+
+
     p2.placeSettlement(15, board);
     p2.placeRoad(2, board); 
     printf("after creating the first settlement and road of p2\n");
     p3.placeSettlement(10, board);
     p3.placeRoad(3, board);
     printf("after creating the first settlement and road of p3\n");
-    
+    */
+
 
 
    

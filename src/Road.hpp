@@ -11,9 +11,13 @@ private:
 
 
 public:
-    int id;         // מזהה הדרך
-    Player* player;     // השחקן שבנה את הדרך (0 אם לא תפוס)
+    int id;        
+    Player* player;     
+    vector<int> betweenVertices; 
     Road(int id);
+    // get the vertices between the road
+    vector<int> getBetweenVertices() const;
+    void setBetweenVertices(const vector<int>& vertices);
     string getPlayerName() const;
     int getId() const;
     void setPlayer(Player* p);
