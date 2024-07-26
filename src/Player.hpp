@@ -39,6 +39,7 @@ private:
     int knightCount;
     int victoryPoints;
     Board& board;
+    bool usingRoadBuildingCard = false;
 
 public:
     string name;
@@ -52,7 +53,8 @@ public:
     void upgradeSettlementToCity(int vertexIndex); // שונה כך שלא יקבל Board כפרמטר
     void addResource(ResourceType resource, int amount); // הוספת כמות
     void removeResource(ResourceType resource, int amount); // Remove resources from the player
-    
+    bool shearchDevelopmentCard(const std::string& type) const;
+
     void incrementNumOfCity();
     void incrementPoints();
     void incrementKnightCount();
@@ -60,7 +62,8 @@ public:
 
     void Trade(Player& player, ResourceType give, int giveAmount, ResourceType take, int takeAmount);  
     void setResources(const map<ResourceType, int>& newResources);
-   
+    void setUsingRoadBuildingCard(bool value);
+
     map<ResourceType, int> getResources() const;
     int getKnightCount() const;
     string getName() const;
@@ -68,6 +71,7 @@ public:
     int getNumOfCity() const;
     void status() const;
     int getNumOfRoads() const;
+    bool getUsingRoadBuildingCard() const;
     const std::vector<std::unique_ptr<DevelopmentCard>>& getDevelopmentCards() const;
 
 

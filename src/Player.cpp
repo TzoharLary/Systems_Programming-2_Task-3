@@ -150,9 +150,20 @@ void Player::placeRoad(int roadIndex) {
         return;
     }   
     Road& road = board.roads.at(roadIndex);
+
+
+    // adding a if condition to check if the player has a RoadBuilding card in his hand
+    // if this is the case, the player can place two roads without the need to buy them.
+    if (getUsingRoadBuildingCard()) {
+        road.setPlayer(this); // Set the player of the road to the current player
+        cout << name << " placed a road on road " << roadIndex << endl;
+        return;
+    } 
     if(this->getPoints() > 2){
         Buy(Player::BuyType::ROAD);
     }
+    
+
     road.setPlayer(this); // Set the player of the road to the current player
     cout << name << " placed a road on road " << roadIndex << endl;
 }
@@ -168,6 +179,15 @@ void Player::upgradeSettlementToCity(int vertexIndex) {
     this->incrementNumOfCity();
     this->incrementPoints();
     std::cout << "Player " << name << " upgraded a settlement to a city on vertex " << vertexIndex << std::endl;
+}
+
+bool Player::shearchDevelopmentCard(const std::string& type) const {
+    for (const auto& card : getDevelopmentCards()) {
+        if (card->getType() == type) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void Player::Trade(Player& player, ResourceType give, int giveAmount, ResourceType take, int takeAmount) {
@@ -248,6 +268,14 @@ int Player::getKnightCount() const {
     return knightCount;
 }
 
+bool Player::getUsingRoadBuildingCard() const {
+    return usingRoadBuildingCard;
+}
+
+void Player::setUsingRoadBuildingCard(bool value) {
+    usingRoadBuildingCard = value;
+}
+
 int Player::getNumOfRoads() const {
 // loop over all the roads and search for the roads that belong to the player
     int count = 0;
@@ -267,10 +295,14 @@ void Player::incrementVictoryPoints() {
 //the method of the development cards is not implemented yet
 
 const std::vector<std::unique_ptr<DevelopmentCard>>& Player::getDevelopmentCards() const {
-    return developmentCards;
+    return developmentCards;    
 }
 
 void Player::buyDevelopmentCard() {
+    // Check if the player has enough resources to buy a development card using method Buy
+    Buy(Player::BuyType::DEVELOPMENT_CARD);
+
+
     auto& deck = board.getDeck();
     if (deck.empty()) {
         std::cerr << "No more development cards available." << std::endl;
@@ -345,6 +377,7 @@ void Player::useDevelopmentCard(const std::string& command) {
 }
     else if (cardType == "RoadBuilding" && tokens.size() == 3) {
         try {
+            setUsingRoadBuildingCard(true);
             cout << "Road Building card" << endl;
             int roadIndex1 = std::stoi(tokens[1]);
             int roadIndex2 = std::stoi(tokens[2]);
@@ -363,6 +396,7 @@ void Player::useDevelopmentCard(const std::string& command) {
         std::cerr << "Invalid command format." << std::endl;
         return;
     }
+    setUsingRoadBuildingCard(false);
 
     developmentCards.erase(it);
 }
