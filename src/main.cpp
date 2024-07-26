@@ -20,20 +20,24 @@ int main() {
     globalCatan = &catan;
 
     for (ResourceType r : {ResourceType::ORE, ResourceType::BRICK, ResourceType::WOOD, ResourceType::WHEAT, ResourceType::SHEEP}) {
-        p1.addResource(r, 100);
-        p2.addResource(r, 100);
-        p3.addResource(r, 100);
+        p1.addResource(r, 10);
+        p2.addResource(r, 10);
+        p3.addResource(r, 10);
     }
-    p1.status();
     // p2.status();
     // p3.status();
 
     for (int i = 0; i < 25; i++) {
         p1.buyDevelopmentCard();   
     }
+    p1.status();
+    p1.placeSettlement(0);
     p1.useDevelopmentCard("Monopoly Ore");
-    p1.placeSettlement(2);
-    p1.placeRoad(1);
+    p1.useDevelopmentCard("RoadBuilding 0 1");
+    p1.useDevelopmentCard("YearOfPlenty Ore Wheat");
+    p1.useDevelopmentCard("Knight");
+    // p1.placeSettlement(2);
+    // p1.placeRoad(1);
     p1.status();
 
 

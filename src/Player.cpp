@@ -14,21 +14,21 @@ Player::Player(const string &name, Board& board) :   knightCount(0), victoryPoin
 
 void Player::status() const {
     cout << "This is the status of: " << getName() << endl;
-    // cout << "Points: " << getPoints() << endl;
+    cout << "Points: " << getPoints() << endl;
     // cout << "Number of Cities: " << getNumOfCity() << endl;
     // cout << "Number of Settlements: " << settlements.size() << endl;
     // cout << "Number of Development Cards: " << getDevelopmentCards().size() << endl;
     // cout << "Number of Knights: " << getKnightCount() << endl;
-    // cout << "Number of Victory Points: " << victoryPoints << endl;
+    cout << "Number of Victory Points: " << victoryPoints << endl;
     cout << "Number of Roads: " << getNumOfRoads() << endl;
     cout << "Resources:" << endl;
     for (const auto& resource : getResources()) {
         cout << "  " << resourceTypeToString(resource.first) << ": " << resource.second << endl;
     }
-    cout << "the development cards are: " << endl;
-    for (const auto& card : getDevelopmentCards()) {
-        cout << "  " << card->getType() << endl;
-    }
+    // cout << "the development cards are: " << endl;
+    // for (const auto& card : getDevelopmentCards()) {
+    //     cout << "  " << card->getType() << endl;
+    // }
 
 }
 
@@ -139,7 +139,8 @@ void Player::placeSettlement(int vertexIndex) {
     vertex.setPlayer(this); // Set the player of the vertex to the current player
     vertex.setType(Vertex::VertexType::SETTLEMENT); // Set the type of the vertex to a settlement
     this->settlements.push_back(vertexIndex); // Add the settlement to the player's list of settlements
-    points += 1; // Settlement is worth 1 point
+    this -> incrementPoints(); // Settlement is worth 1 point
+    cout << "Player " << getName() << " increment points" << endl;
     cout << name << " placed a settlement on vertex " << vertexIndex << endl;
 }
 
@@ -277,13 +278,23 @@ void Player::buyDevelopmentCard() {
     }
 
     // Add the card to the player's hand in random order
-    developmentCards.push_back(std::move(deck.back()));
+    addDevelopmentCard(std::move(deck.back()));
     deck.pop_back();
 }
 
 
+
 void Player::addDevelopmentCard(std::unique_ptr<DevelopmentCard> card) {
-    developmentCards.push_back(std::move(card));
+    // if condition to check if the card is victory point
+    // if this is the case, use the methos useDevelopmentCard and insert 
+    // the command "VictoryPoint" to implement the victory point through the method.
+    if (card->getType() == "VictoryPoint") {
+        developmentCards.push_back(std::move(card));
+        useDevelopmentCard("VictoryPoint");
+        return;
+    }else{
+        developmentCards.push_back(std::move(card));
+    }
 }
 
 void Player::useDevelopmentCard(const std::string& command) {
@@ -311,34 +322,43 @@ void Player::useDevelopmentCard(const std::string& command) {
     }
     // If the card type is "Monopoly" and there are two parameters in the command.
     if (cardType == "Monopoly" && tokens.size() == 2) {
-        ResourceType MonopolyResource;
-        try
-        {
-            MonopolyResource = stringToResourceType(tokens[1]);
-        }
-        catch(const std::exception& e)
-        {
-           std::cerr << "The resource specified in the command does not exist." << std::endl;
-        }
+        try {
+        ResourceType resource = stringToResourceType(tokens[1]);
+        (*it)->applyBenefit(this, std::vector<ResourceType>{resource});
+    } catch(const std::exception& e) {
+        std::cerr << "The resource specified in the command does not exist." << std::endl;
+    }
         // Turn on the monopoly card
-        (*it)->applyBenefit(this, MonopolyResource);
 
 
        
-    } else if (cardType == "YearOfPlenty" && tokens.size() == 3) {
-        ResourceType res1 = static_cast<ResourceType>(std::stoi(tokens[1]));
-        ResourceType res2 = static_cast<ResourceType>(std::stoi(tokens[2]));
-        (*it)->applyBenefit(this, res1);
-        (*it)->applyBenefit(this, res2);
-    } else if (cardType == "RoadBuilding" && tokens.size() == 3) {
-        int roadIndex1 = std::stoi(tokens[1]);
-        int roadIndex2 = std::stoi(tokens[2]);
-        (*it)->applyBenefit(this, static_cast<ResourceType>(roadIndex1));
-        (*it)->applyBenefit(this, static_cast<ResourceType>(roadIndex2));
+    } else if (cardType == "YearOfPlenty" && tokens.size() >= 2 && tokens.size() <= 3) {
+    try {
+        std::vector<ResourceType> resources;
+        for (size_t i = 1; i < tokens.size(); ++i) {
+            resources.push_back(stringToResourceType(tokens[i]));
+        }
+        (*it)->applyBenefit(this, resources);
+    } catch(const std::exception& e) {
+        std::cerr << "The resource specified in the command does not exist." << std::endl;
+    }
+}
+    else if (cardType == "RoadBuilding" && tokens.size() == 3) {
+        try {
+            cout << "Road Building card" << endl;
+            int roadIndex1 = std::stoi(tokens[1]);
+            int roadIndex2 = std::stoi(tokens[2]);
+            cout << "Road 1: " << roadIndex1 << " Road 2: " << roadIndex2 << endl;
+
+
+            (*it)->applyBenefit(this, std::make_pair(roadIndex1, roadIndex2));
+        } catch(const std::exception& e) {
+            std::cout << "Invalid road indices specified in the command." << std::endl;
+        }
     } else if (cardType == "Knight") {
-        (*it)->applyBenefit(this, ResourceType::DESERT);
+        (*it)->applyBenefit(this, std::make_pair(0, 0));
     } else if (cardType == "VictoryPoint") {
-        (*it)->applyBenefit(this, ResourceType::DESERT);
+        (*it)->applyBenefit(this, std::make_pair(0, 0));
     } else {
         std::cerr << "Invalid command format." << std::endl;
         return;
@@ -346,6 +366,7 @@ void Player::useDevelopmentCard(const std::string& command) {
 
     developmentCards.erase(it);
 }
+
 
 
 

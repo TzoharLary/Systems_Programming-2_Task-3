@@ -27,4 +27,4 @@ src/icon
 *~
 
 # Ignore Mac-specific files
-.DS_Store
+*.DS_Store
