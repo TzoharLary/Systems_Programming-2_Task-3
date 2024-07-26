@@ -5,36 +5,39 @@
 #include "Board.hpp"
 
 using namespace std;
+Catan* globalCatan = nullptr;
+
 
 int main() {
-    Player p1("Amit");
-    Player p2("Yossi");
-    Player p3("Dana");
-    Catan catan(p1, p2, p3);
-    // return 0;
+    Board board;
+    Player p1("Amit", board);
+    Player p2("Yossi", board);
+    Player p3("Dana", board);
+    Catan catan(p1, p2, p3, board);
 
     catan.ChooseStartingPlayer();  // Randomly choose starting player.
-    
-    Board board = catan.getBoard(); // Get the board from the game.
 
-    // p1.placeSettlement(0, board);
-    // p1.placeRoad(0, board);
-    // p1.placeSettlement(10, board);
-    // p1.placeRoad(9, board);
+    globalCatan = &catan;
 
     for (ResourceType r : {ResourceType::ORE, ResourceType::BRICK, ResourceType::WOOD, ResourceType::WHEAT, ResourceType::SHEEP}) {
         p1.addResource(r, 100);
         p2.addResource(r, 100);
         p3.addResource(r, 100);
     }
-    
     p1.status();
-    p2.status();
-    std::cout << "Before trade: "<< std::endl;
-    p1.Trade(p2, ResourceType::WOOD, 5, ResourceType::BRICK, 5);
-    std::cout << "After trade: " << std::endl;
+    // p2.status();
+    // p3.status();
+
+    for (int i = 0; i < 25; i++) {
+        p1.buyDevelopmentCard();   
+    }
+    p1.useDevelopmentCard("Monopoly Ore");
+    p1.placeSettlement(2);
+    p1.placeRoad(1);
     p1.status();
-    p2.status();
+
+
+
   
     /*
     printf("after creating the first settlement and road of p1\n");
@@ -43,6 +46,17 @@ int main() {
     for (ResourceType r : {ResourceType::ORE, ResourceType::BRICK, ResourceType::WOOD, ResourceType::WHEAT, ResourceType::SHEEP}) {
         p1.addResource(r, 20);
     }
+    p1.status();
+    p2.status();
+    std::cout << "Before trade: "<< std::endl;
+    p1.Trade(p2, ResourceType::WOOD, 5, ResourceType::BRICK, 5);
+    std::cout << "After trade: " << std::endl;
+    p1.status();
+    p2.status();
+    // p1.placeSettlement(0, board);
+    // p1.placeRoad(0, board);
+    // p1.placeSettlement(10, board);
+    // p1.placeRoad(9, board);
     board.printAdjacent(0, false);
     board.printAdjacent(0, true);
     p2.placeSettlement(3, board);

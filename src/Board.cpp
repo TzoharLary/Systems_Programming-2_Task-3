@@ -2,6 +2,12 @@
 #include <stdexcept>
 #include <vector>
 #include "Player.hpp"
+#include "DevelopmentCard.hpp"
+#include <random>
+#include <algorithm>
+#include <memory>
+
+
 
 Board::Board() {
     setup();
@@ -11,6 +17,7 @@ void Board::setup() {
     createRoads();
     createVertices();
     createTiles();
+    createDevelopmentCards();
 }
 
 void Board::createRoads() {
@@ -260,6 +267,28 @@ void Board::createTiles() {
     addTile(18, SHEEP, 11, {43, 44, 45, 51, 52, 53}, {14, 15, 17});
 }
 
+void Board::createDevelopmentCards() {
+    int id = 0;
+    for (int i = 0; i < 5; ++i) {
+        developmentCards.push_back(std::make_unique<VictoryPointCard>());
+    }
+    for (int i = 0; i < 2; ++i) {
+        developmentCards.push_back(std::make_unique<YearOfPlentyCard>());
+    }
+    for (int i = 0; i < 2; ++i) {
+        developmentCards.push_back(std::make_unique<RoadBuildingCard>());
+    }
+    for (int i = 0; i < 14; ++i) {
+        developmentCards.push_back(std::make_unique<KnightCard>());
+    }
+    for (int i = 0; i < 2; ++i) {
+        developmentCards.push_back(std::make_unique<MonopolyCard>());
+    }
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(developmentCards.begin(), developmentCards.end(), g);
+}
+
 void Board::addTile(int id, ResourceType resource, int number, const vector<Vertex>& verticesOfTile, const vector<int>& adjacentTiles) {
     
     for (const auto& vertex : verticesOfTile) {
@@ -323,7 +352,16 @@ std::vector<int> Board::getAdjacentVertices(int vertexIndex) const {
     return vertices.at(vertexIndex).adjacentVertices; 
 }
 
+vector<std::unique_ptr<DevelopmentCard>>& Board::getDeck() {
+    return developmentCards;
+}
 
+vector<Road> Board::getRoads() const {
+    return roads;
+}
+
+// Board::~Board() {
+// }
 // Functions for test purposes:
 void Board::printAdjacent(int index, bool isTile) const {
     std::vector<int> result;

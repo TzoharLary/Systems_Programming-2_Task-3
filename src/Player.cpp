@@ -1,12 +1,15 @@
 #include "Player.hpp"
 #include "Board.hpp"
 #include "Validator.hpp"
+#include "DevelopmentCard.hpp"
+#include <vector>
 
 
-Player::Player(const string &name) : name(name), points(0), Citys(0) {
+Player::Player(const string &name, Board& board) :   knightCount(0), victoryPoints(0), board(board), name(name), points(0), Citys(0) {
     for (int i = WOOD; i <= ORE; ++i) {
         resources[static_cast<ResourceType>(i)] = 0;
     }
+    
 }
 
 void Player::status() const {
@@ -14,11 +17,22 @@ void Player::status() const {
     // cout << "Points: " << getPoints() << endl;
     // cout << "Number of Cities: " << getNumOfCity() << endl;
     // cout << "Number of Settlements: " << settlements.size() << endl;
+    // cout << "Number of Development Cards: " << getDevelopmentCards().size() << endl;
+    // cout << "Number of Knights: " << getKnightCount() << endl;
+    // cout << "Number of Victory Points: " << victoryPoints << endl;
+    cout << "Number of Roads: " << getNumOfRoads() << endl;
     cout << "Resources:" << endl;
     for (const auto& resource : getResources()) {
         cout << "  " << resourceTypeToString(resource.first) << ": " << resource.second << endl;
     }
+    cout << "the development cards are: " << endl;
+    for (const auto& card : getDevelopmentCards()) {
+        cout << "  " << card->getType() << endl;
+    }
+
 }
+
+
 
 void Player::Buy(BuyType type) {
     // There is no problem creating a map with each call
@@ -86,8 +100,23 @@ string Player::resourceTypeToString(ResourceType type) const {
     }
 }
 
-void Player::placeSettlement(int vertexIndex, Board& board) {
-    
+ResourceType Player::stringToResourceType(const std::string& str) const {
+    if (str == "Wood") {
+        return WOOD;
+    } else if (str == "Brick") {
+        return BRICK;
+    } else if (str == "Sheep") {
+        return SHEEP;
+    } else if (str == "Wheat") {
+        return WHEAT;
+    } else if (str == "Ore") {
+        return ORE;
+    } else {
+        throw std::runtime_error("Invalid resource type.");
+    }
+}
+
+void Player::placeSettlement(int vertexIndex) {
     Validator validator("Player", "placeSettlement", this, vertexIndex, board);
     if (!validator.isValid()) {
         return;
@@ -107,11 +136,6 @@ void Player::placeSettlement(int vertexIndex, Board& board) {
         }
     }
 
-    // CHECK IF I CAN REMOVE THIS LINES
-    // vertex.occupied = true; // From now the vertex will be occupied by the player
-    // vertex.player = this; // Save the pointer to the player
-
-
     vertex.setPlayer(this); // Set the player of the vertex to the current player
     vertex.setType(Vertex::VertexType::SETTLEMENT); // Set the type of the vertex to a settlement
     this->settlements.push_back(vertexIndex); // Add the settlement to the player's list of settlements
@@ -119,7 +143,7 @@ void Player::placeSettlement(int vertexIndex, Board& board) {
     cout << name << " placed a settlement on vertex " << vertexIndex << endl;
 }
 
-void Player::placeRoad(int roadIndex, Board& board) { 
+void Player::placeRoad(int roadIndex) { 
     Validator validator("Player", "placeRoad", this, roadIndex, board);
     if (!validator.isValid()) {
         return;
@@ -132,22 +156,16 @@ void Player::placeRoad(int roadIndex, Board& board) {
     cout << name << " placed a road on road " << roadIndex << endl;
 }
 
-void Player::upgradeSettlementToCity(int vertexIndex, Board& board) {
+void Player::upgradeSettlementToCity(int vertexIndex) {
     Validator validator("Player", "upgradeSettlementToCity", this, vertexIndex, board);
     if (!validator.isValid()) {
         return;
     }  
-    // Access the vertex by index, assuming existence is already verified
-    // because vertex is alias so we will get to the method with . and not ->
     Vertex& vertex = board.vertices.at(vertexIndex);
-    // try to buy
     this->Buy(Player::BuyType::CITY);
-    // Change the vertex type to CITY, indicating an upgrade
     vertex.setType(Vertex::VertexType::CITY);
-    // Increment points by 1. This assumes a settlement is worth 1 point and upgrading to a city makes it worth 2 points in total
     this->incrementNumOfCity();
     this->incrementPoints();
-    // Output a message indicating the player has upgraded a settlement to a city at the specified vertex
     std::cout << "Player " << name << " upgraded a settlement to a city on vertex " << vertexIndex << std::endl;
 }
 
@@ -190,10 +208,6 @@ void Player::removeResource(ResourceType resource, int amount) {
     }
 }
 
-string Player::getName() const {
-    return name;
-}
-
 int Player::getPoints() const {
     return points;
 }
@@ -210,6 +224,11 @@ void Player::incrementPoints() {
     points++;
 }
 
+
+string Player::getName() const {
+    return name;
+}
+
 // Getter for resources
 map<ResourceType, int> Player::getResources() const {
     return resources;
@@ -219,3 +238,117 @@ map<ResourceType, int> Player::getResources() const {
 void Player::setResources(const map<ResourceType, int>& newResources) {
     resources = newResources;
 }
+
+void Player::incrementKnightCount() {
+    knightCount++;
+}
+
+int Player::getKnightCount() const {
+    return knightCount;
+}
+
+int Player::getNumOfRoads() const {
+// loop over all the roads and search for the roads that belong to the player
+    int count = 0;
+    for (const auto& road : board.getRoads()) {
+        if (road.getPlayerName() == this->getName()) {
+            count++;
+        }
+    }
+    return count;
+
+}
+
+void Player::incrementVictoryPoints() {
+        victoryPoints++;
+}
+
+//the method of the development cards is not implemented yet
+
+const std::vector<std::unique_ptr<DevelopmentCard>>& Player::getDevelopmentCards() const {
+    return developmentCards;
+}
+
+void Player::buyDevelopmentCard() {
+    auto& deck = board.getDeck();
+    if (deck.empty()) {
+        std::cerr << "No more development cards available." << std::endl;
+        return;
+    }
+
+    // Add the card to the player's hand in random order
+    developmentCards.push_back(std::move(deck.back()));
+    deck.pop_back();
+}
+
+
+void Player::addDevelopmentCard(std::unique_ptr<DevelopmentCard> card) {
+    developmentCards.push_back(std::move(card));
+}
+
+void Player::useDevelopmentCard(const std::string& command) {
+    // add check if the parameters are valid - is string
+    
+    // Breaks the string into words (tokens) using a default separator (space).
+    std::istringstream iss(command);
+    std::vector<std::string> tokens{std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{}};
+    // If the player has no development cards, return
+    if (tokens.empty()){
+        cout << "No development cards available." << endl;
+        return;
+    }
+    // The first token is the type of the card
+    std::string cardType = tokens[0];
+    // Find the card in the player's hand
+    auto it = std::find_if(developmentCards.begin(), developmentCards.end(),
+        [&cardType](const std::unique_ptr<DevelopmentCard>& card) {
+            return card->getType() == cardType;
+        }); 
+    // If the card is not found, print an error message and return
+    if (it == developmentCards.end()) {
+        cout << "No such card available." << endl;
+        return;
+    }
+    // If the card type is "Monopoly" and there are two parameters in the command.
+    if (cardType == "Monopoly" && tokens.size() == 2) {
+        ResourceType MonopolyResource;
+        try
+        {
+            MonopolyResource = stringToResourceType(tokens[1]);
+        }
+        catch(const std::exception& e)
+        {
+           std::cerr << "The resource specified in the command does not exist." << std::endl;
+        }
+        // Turn on the monopoly card
+        (*it)->applyBenefit(this, MonopolyResource);
+
+
+       
+    } else if (cardType == "YearOfPlenty" && tokens.size() == 3) {
+        ResourceType res1 = static_cast<ResourceType>(std::stoi(tokens[1]));
+        ResourceType res2 = static_cast<ResourceType>(std::stoi(tokens[2]));
+        (*it)->applyBenefit(this, res1);
+        (*it)->applyBenefit(this, res2);
+    } else if (cardType == "RoadBuilding" && tokens.size() == 3) {
+        int roadIndex1 = std::stoi(tokens[1]);
+        int roadIndex2 = std::stoi(tokens[2]);
+        (*it)->applyBenefit(this, static_cast<ResourceType>(roadIndex1));
+        (*it)->applyBenefit(this, static_cast<ResourceType>(roadIndex2));
+    } else if (cardType == "Knight") {
+        (*it)->applyBenefit(this, ResourceType::DESERT);
+    } else if (cardType == "VictoryPoint") {
+        (*it)->applyBenefit(this, ResourceType::DESERT);
+    } else {
+        std::cerr << "Invalid command format." << std::endl;
+        return;
+    }
+
+    developmentCards.erase(it);
+}
+
+
+
+
+
+

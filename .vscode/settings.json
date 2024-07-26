@@ -66,6 +66,11 @@
         "utility": "cpp",
         "format": "cpp",
         "text_encoding": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "__tree": "cpp",
+        "deque": "cpp",
+        "queue": "cpp",
+        "span": "cpp",
+        "stack": "cpp"
     }
 }

@@ -3,8 +3,12 @@
 #include <cstdlib>
 #include <ctime>
 
-Catan::Catan(Player &p1, Player &p2, Player &p3) : player1(p1), player2(p2), player3(p3), board() {
+Catan::Catan(Player &p1, Player &p2, Player &p3, Board& board) : player1(p1), player2(p2), player3(p3), board(board) {
     std::srand(std::time(0));
+}
+
+Board& Catan::getBoard() {
+    return board;
 }
 
 void Catan::ChooseStartingPlayer() {
@@ -19,9 +23,11 @@ void Catan::ChooseStartingPlayer() {
     std::cout << "Starting player: " << currentPlayer->getName() << std::endl;
 }
 
-Board Catan::getBoard() const {
-    return board;
+std::vector<Player*> Catan::getPlayers() {
+    return { &player1, &player2, &player3 };
 }
+
+
 
 void Catan::printWinner() const {
     if (player1.getPoints() >= 100) {

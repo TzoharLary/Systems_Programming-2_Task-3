@@ -1,7 +1,7 @@
 # The CXX variable contains the compiler to be used
 CXX = g++
 # The CXXFLAGS variable contains the flags to be passed to the compiler
-CXXFLAGS = -std=c++11 -Wall -Wextra -Iinclude
+CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude
 # The LDFLAGS variable contains the flags to be passed to the linker
 LDFLAGS = -Llib -lgtest -lpthread
 

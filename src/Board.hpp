@@ -6,13 +6,21 @@
 #include "Tile.hpp"
 #include "Vertex.hpp"
 #include "Road.hpp"
+#include "DevelopmentCard.hpp"
 #include <iostream>
+#include <iterator>
+#include <memory>
+#include <algorithm>
+#include <random>
 using std::vector;
 using std::map;
 using std::ostream_iterator;
 using std::cout;
 using std::endl;
 using std::copy;
+using std::unique_ptr;
+using std::make_unique;
+using std::shuffle;
 
 class Player;
 
@@ -22,26 +30,38 @@ private:
     void createRoads(); 
     void createVertices();
     void createTiles();
+    void createDevelopmentCards();
     void setup();
     template <typename T>
     void printVector(const vector<T>& vec) const {
         copy(vec.begin(), vec.end(), ostream_iterator<T>(cout, " "));
         cout << "]" << endl;
     }
+    // we create a field of development cards that we create on the board that the plaeyrs can buy
+    // the unique_ptr is a smart pointer that will delete the object when it goes out of scope
+    // and now we can use polymorphism with the development cards.
+    vector<std::unique_ptr<DevelopmentCard>> developmentCards;
 
 
 public:
+    //~Board(); // Destructor for cleaning up memory after the game ends
     Board();
+    Board(const Board&) = delete; // נטרול בנאי העתקה
+    Board& operator=(const Board&) = delete; // נטרול פעולת השמה מעתיקה
+    Board(Board&&) = default; // בנאי העברה ברירת מחדל
+    Board& operator=(Board&&) = default; // פעולת השמה מעבירה ברירת מחדל
     vector<Tile> tiles;
     vector<Vertex> vertices;
     vector<Road> roads;
+    vector<Road> getRoads() const;
     vector<Tile*> getTilesForVertex(int vertexIndex);
     Tile getTile(int index) const;
     void addTile(int id, ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles);
     vector<int> getAdjacentTiles(int tileIndex) const;
     vector<int> getAdjacentVertices(int vertexIndex) const;
     void printAdjacent(int index, bool isTile) const;
-    
+    vector<unique_ptr<DevelopmentCard>>& getDeck();
+
 };
 
 #endif // BOARD_HPP
