@@ -32,8 +32,6 @@ void Player::status() const {
 
 }
 
-
-
 void Player::Buy(BuyType type) {
     // There is no problem creating a map with each call
     // to the function because the local object cost is created
@@ -313,8 +311,6 @@ void Player::buyDevelopmentCard() {
     addDevelopmentCard(std::move(deck.back()));
     deck.pop_back();
 }
-
-
 
 void Player::addDevelopmentCard(std::unique_ptr<DevelopmentCard> card) {
     // if condition to check if the card is victory point

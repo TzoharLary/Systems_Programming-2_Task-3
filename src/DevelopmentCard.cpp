@@ -41,7 +41,6 @@ void MonopolyCard::applyBenefit(Player* player, const std::variant<vector<Resour
     }
 }
 
-
 std::string RoadBuildingCard::getType() const {
     return "RoadBuilding";
 }
