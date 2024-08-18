@@ -17,6 +17,7 @@ core
 
 # Ignore icon files
 icon
+icon?
 src/icon
 
 
