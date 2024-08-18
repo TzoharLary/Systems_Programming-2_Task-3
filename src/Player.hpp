@@ -32,7 +32,14 @@ private:
     bool checkResources(const map<ResourceType, int>& cost);
     string resourceTypeToString(ResourceType type) const;
     void Buy(BuyType type);
-    ResourceType stringToResourceType(const std::string& str) const; // פונקציה חדשה
+    ResourceType stringToResourceType(const std::string& str) const; 
+    void decrementNumOfSettlements(int vertexIndex);
+    void incrementNumOfCity();
+    // friend void incrementVictoryPoints();
+
+    void incrementVictoryPoints();
+    void incrementKnightCount();
+    void incrementPoints();   
 
     // we create a field that hold the development cards of the player
     vector<unique_ptr<DevelopmentCard>> developmentCards;
@@ -41,6 +48,11 @@ private:
     Board& board;
     bool usingRoadBuildingCard = false;
 
+    friend class KnightCard;
+    friend class VictoryPointCard;
+    friend class DevelopmentCard;
+
+
 public:
     string name;
     int points;
@@ -48,17 +60,14 @@ public:
     vector<int> settlements; // List of settlement vertex indices
     int Citys; // List of Citys vertex indices
     Player(const string& name, Board& board); // נוסיף הפניה ללוח
-    void placeSettlement(int vertexIndex); // שונה כך שלא יקבל Board כפרמטר
+    void placeSettlement(int vertexIndex); // 
     void placeRoad(int roadIndex); // שונה כך שלא יקבל Board כפרמטר
-    void upgradeSettlementToCity(int vertexIndex); // שונה כך שלא יקבל Board כפרמטר
+    void upgradeSettlementToCity(int vertexIndex); // this function will upgrade a settlement to a city
     void addResource(ResourceType resource, int amount); // הוספת כמות
     void removeResource(ResourceType resource, int amount); // Remove resources from the player
     bool shearchDevelopmentCard(const std::string& type) const;
 
-    void incrementNumOfCity();
-    void incrementPoints();
-    void incrementKnightCount();
-    void incrementVictoryPoints();
+
 
     void Trade(Player& player, ResourceType give, int giveAmount, ResourceType take, int takeAmount);  
     void setResources(const map<ResourceType, int>& newResources);

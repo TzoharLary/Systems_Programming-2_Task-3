@@ -1,6 +1,7 @@
 #include "DevelopmentCard.hpp"
 #include <cstdlib> // for rand()
 #include "catan.hpp"
+#include "Player.hpp"
 
 
 std::string MonopolyCard::getType() const {

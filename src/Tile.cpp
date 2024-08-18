@@ -35,8 +35,8 @@ void Tile::distributeResources(int rolledNumber, Board& board) {
             continue;
         }
         for (const auto& vertex : tile.vertices) {
-            if (vertex.player != nullptr) {
-                Player* player = vertex.player;
+            if (vertex.isOccupied()) {
+                Player* player = vertex.getPlayer();
                 if (vertex.getType() == Vertex::VertexType::SETTLEMENT) {
                     player->addResource(tile.resource, 1);
                 } else if (vertex.getType() == Vertex::VertexType::CITY) {

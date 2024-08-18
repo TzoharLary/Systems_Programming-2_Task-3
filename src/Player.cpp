@@ -15,12 +15,12 @@ Player::Player(const string &name, Board& board) :   knightCount(0), victoryPoin
 void Player::status() const {
     cout << "This is the status of: " << getName() << endl;
     cout << "Points: " << getPoints() << endl;
-    // cout << "Number of Cities: " << getNumOfCity() << endl;
-    // cout << "Number of Settlements: " << settlements.size() << endl;
+    cout << "Number of Cities: " << getNumOfCity() << endl;
+    cout << "Number of Settlements: " << settlements.size() << endl;
     // cout << "Number of Development Cards: " << getDevelopmentCards().size() << endl;
     // cout << "Number of Knights: " << getKnightCount() << endl;
-    cout << "Number of Victory Points: " << victoryPoints << endl;
-    cout << "Number of Roads: " << getNumOfRoads() << endl;
+    // cout << "Number of Victory Points: " << victoryPoints << endl;
+    // cout << "Number of Roads: " << getNumOfRoads() << endl;
     cout << "Resources:" << endl;
     for (const auto& resource : getResources()) {
         cout << "  " << resourceTypeToString(resource.first) << ": " << resource.second << endl;
@@ -62,7 +62,7 @@ void Player::Buy(BuyType type) {
             for (const auto& item : cost) {
                 removeResource(item.first, item.second);
             }
-            cout << "Purchase successful!" << endl;
+            cout << "Purchase of " << resourceTypeToString(cost.begin()->first) << " successful." << endl;
         } catch (const runtime_error& e) {
             cout << e.what() << endl;
         }
@@ -115,16 +115,28 @@ ResourceType Player::stringToResourceType(const std::string& str) const {
 }
 
 void Player::placeSettlement(int vertexIndex) {
-    Validator validator("Player", "placeSettlement", this, vertexIndex, board);
+
+    /* Validator object explanation:
+        We create a validator object to check
+        if the player can place a settlement on the vertex
+        the validator object will check all
+        the conditions and return a boolean value if the player can place a settlement 
+    */
+   Validator validator("Player", "placeSettlement", this, vertexIndex, board);
     if (!validator.isValid()) {
         return;
     }   
-    // Get the vertex object from the map
+    // Get the vertex object from the map of vertices for 
     Vertex& vertex = board.vertices.at(vertexIndex); // Using at() instead of []
 
+    // Condition to check if this is the first 2 settelments of the player
+    // that the player dont need to buy the settlement because he gets it for free
+   
+    // If this is not the start of the game
     if(this->getPoints() > 2){
          Buy(Player::BuyType::SETTLEMENT);
     }
+    // If this is the start of the game
     else{
         // Get the tiles that are associated with the vertex that we built the settlement on
         vector<Tile*> tilesForThisVertex = board.getTilesForVertex(vertexIndex);
@@ -134,13 +146,15 @@ void Player::placeSettlement(int vertexIndex) {
         }
     }
 
-    vertex.setPlayer(this); // Set the player of the vertex to the current player
-    vertex.setType(Vertex::VertexType::SETTLEMENT); // Set the type of the vertex to a settlement
+    // vertex.setPlayer(this); // Set the player of the vertex to the current player
+    // vertex.setType(Vertex::VertexType::SETTLEMENT); // Set the type of the vertex to a settlement
+    vertex.setVertexProperties(Vertex::VertexType::SETTLEMENT, this);
     this->settlements.push_back(vertexIndex); // Add the settlement to the player's list of settlements
     this -> incrementPoints(); // Settlement is worth 1 point
-    cout << "Player " << getName() << " increment points" << endl;
+    cout << "Player " << getName() << " increment points to " << getPoints() << endl;
     cout << name << " placed a settlement on vertex " << vertexIndex << endl;
 }
+
 
 void Player::placeRoad(int roadIndex) { 
     Validator validator("Player", "placeRoad", this, roadIndex, board);
@@ -166,14 +180,35 @@ void Player::placeRoad(int roadIndex) {
     cout << name << " placed a road on road " << roadIndex << endl;
 }
 
+/* Explanation of the function upgradeSettlementToCity:
+
+    This function performs the following actions:
+    1. Validates if the player can upgrade a settlement to a city using the Validator object.
+    2. If the validation fails, the function exits without making any changes.
+    3. If validation is successful, retrieves the Vertex object from the board using the provided vertexIndex.
+    4. Initiates the process of purchasing a city by calling the Buy method with the appropriate BuyType.
+    5. Changes the type of the specified vertex to CITY.
+    6. Increments the player's number of cities.
+    7. Increases the player's points.
+    8. Outputs a message indicating the successful upgrade of a settlement to a city.
+*/
 void Player::upgradeSettlementToCity(int vertexIndex) {
     Validator validator("Player", "upgradeSettlementToCity", this, vertexIndex, board);
     if (!validator.isValid()) {
         return;
     }  
     Vertex& vertex = board.vertices.at(vertexIndex);
-    this->Buy(Player::BuyType::CITY);
-    vertex.setType(Vertex::VertexType::CITY);
+    if (this->getPoints() > 1) {
+        Buy(Player::BuyType::CITY);
+    }
+    else{
+        cout << "You in the start of the game, you can't buy a city" << endl;
+        return;
+    }
+   
+    decrementNumOfSettlements(vertexIndex);
+    // vertex.setType(Vertex::VertexType::CITY);
+    vertex.setVertexProperties(Vertex::VertexType::CITY, this);
     this->incrementNumOfCity();
     this->incrementPoints();
     std::cout << "Player " << name << " upgraded a settlement to a city on vertex " << vertexIndex << std::endl;
@@ -243,7 +278,6 @@ void Player::incrementPoints() {
     points++;
 }
 
-
 string Player::getName() const {
     return name;
 }
@@ -288,6 +322,20 @@ int Player::getNumOfRoads() const {
 
 void Player::incrementVictoryPoints() {
         victoryPoints++;
+}
+
+/* Explanation of the function decrementNumOfSettlements:
+
+    This function performs the following actions:
+    1. Searches for the vertexIndex in the player's list of settlements.
+    2. If the vertexIndex is found, removes the vertexIndex from the list of settlements.
+    3. If the vertexIndex is not found, the function does nothing.
+*/
+void Player::decrementNumOfSettlements(int vertexIndex) {
+    auto it = std::find(settlements.begin(), settlements.end(), vertexIndex);
+    if (it != settlements.end()) {
+        settlements.erase(it);
+    }
 }
 
 //the method of the development cards is not implemented yet

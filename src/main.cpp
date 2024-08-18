@@ -27,15 +27,17 @@ int main() {
     // p2.status();
     // p3.status();
 
-    for (int i = 0; i < 25; i++) {
-        p1.buyDevelopmentCard();   
-    }
+    // for (int i = 0; i < 25; i++) {
+    //     p1.buyDevelopmentCard();   
+    // }
     p1.status();
     p1.placeSettlement(0);
-    p1.useDevelopmentCard("Monopoly Ore");
-    p1.useDevelopmentCard("RoadBuilding 0 1");
-    p1.useDevelopmentCard("YearOfPlenty Ore Wheat");
-    p1.useDevelopmentCard("Knight");
+    p1.placeSettlement(0);
+    p1.upgradeSettlementToCity(0);
+    // p1.useDevelopmentCard("Monopoly Ore");
+    // p1.useDevelopmentCard("RoadBuilding 0 1");
+    // p1.useDevelopmentCard("YearOfPlenty Ore Wheat");
+    // p1.useDevelopmentCard("Knight");
     // p1.placeSettlement(2);
     // p1.placeRoad(1);
     p1.status();

@@ -72,16 +72,16 @@ void Validator::validatePlayer() {
 
 
         Vertex& vertex = boardRef.vertices.at(index);
-        if (vertex.occupied) {
+        if (vertex.isOccupied()) {
             valid = false;
-            throw std::runtime_error("There is already a settlement on this vertex");
+            throw std::runtime_error("There is already a settlement on this vertex. (vertex index: " + std::to_string(index) + ")");
         }
         /*   Check if there is a settlement on an adjacent vertex
          For loop that iterates over the adjacent vertices of the current vertex
          and checks if there is a settlement on any of them
         */ 
         for (int adjacentVertex : vertex.adjacentVertices) {
-            if (boardRef.vertices.at(adjacentVertex).occupied) { 
+            if (boardRef.vertices.at(adjacentVertex).isOccupied()) { 
                 valid = false;
                 throw std::runtime_error("There is a settlement on an adjacent vertex");
             }

@@ -11,25 +11,29 @@ class Player;
 
 
 class Vertex {
-private:
-
-
 public:
     enum VertexType { NONE, SETTLEMENT, CITY };
-    int id;                          // מזהה הקודקוד
-    bool occupied;                   // האם הקודקוד תפוס
-    Player* player;                      // מזהה השחקן שתפס את הקודקוד
-    VertexType type;                 // סוג התפוסה (יישוב או עיר)
-    vector<int> adjacentVertices;  // קודקודים סמוכים
+private:
+    int id;                          // The id of the vertex
+    bool occupied;                   // If the vertex is occupied
+    Player* player;                  // Which player is occupying the vertex
+    VertexType type;                 // Type of the vertex
+    vector<int> adjacentVertices;    // All the vertices that are adjacent to this vertex
+    void setPlayer(Player* p);
+    void setType(VertexType newType);
+    void setVertexProperties(VertexType newType, Player* p);
+    friend class Player;
+    friend class Board;
+
+public:
+    void setAdjacentVertices(const vector<int>& vertices);
+    std::vector<int> getAdjacentVertices() const;
     string getPlayerName() const;
     bool isOccupied() const;
+    Player* getPlayer() const;
     Vertex(int idx); 
-    void setAdjacentVertices(const vector<int>& vertices);
-    void setType(VertexType newType);
     VertexType getType() const;
     int getId() const;
-    void setPlayer(Player* p);
-    
 
 };
 

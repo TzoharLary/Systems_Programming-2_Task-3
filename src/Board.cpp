@@ -268,7 +268,6 @@ void Board::createTiles() {
 }
 
 void Board::createDevelopmentCards() {
-    int id = 0;
     for (int i = 0; i < 5; ++i) {
         developmentCards.push_back(std::make_unique<VictoryPointCard>());
     }
@@ -344,13 +343,7 @@ std::vector<int> Board::getAdjacentTiles(int tileIndex) const {
     return tiles[tileIndex].adjacentTiles;
 }
 
-std::vector<int> Board::getAdjacentVertices(int vertexIndex) const {
-    if (vertexIndex < 0 || vertexIndex >= static_cast<int>(vertices.size())) {
-        // If the vertexId does not exist, throw an error
-        throw std::runtime_error("Vertex ID does not exist in the vertices vector that the tile is being added to");
-    }
-    return vertices.at(vertexIndex).adjacentVertices; 
-}
+
 
 vector<std::unique_ptr<DevelopmentCard>>& Board::getDeck() {
     return developmentCards;
@@ -360,17 +353,7 @@ vector<Road> Board::getRoads() const {
     return roads;
 }
 
-// Board::~Board() {
-// }
-// Functions for test purposes:
-void Board::printAdjacent(int index, bool isTile) const {
-    std::vector<int> result;
-    if (isTile) {
-        result = getAdjacentTiles(index);
-    } else {
-        result = getAdjacentVertices(index);
-    }
-    cout << (isTile ? "this is the Adjacent of the Tiles: " : "this is the Adjacent of the Vertices: ") << "[ "; 
-    printVector(result);
-    cout << "\n";
-}
+
+/* Functions for test purposes:
+
+*/
