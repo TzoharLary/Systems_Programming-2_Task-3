@@ -8,7 +8,7 @@ using std::vector;
 
 
 class Player;
-
+class Board;
 
 class Vertex {
 public:
@@ -23,6 +23,7 @@ private:
     void setType(VertexType newType);
     void setVertexProperties(VertexType newType, Player* p);
     void setAdjacentVertices(const vector<int>& vertices);
+    Vertex(int idx); 
     friend class Player;
     friend class Board;
 
@@ -31,7 +32,6 @@ public:
     string getPlayerName() const;
     bool isOccupied() const;
     Player* getPlayer() const;
-    Vertex(int idx); 
     VertexType getType() const;
     int getId() const;
 

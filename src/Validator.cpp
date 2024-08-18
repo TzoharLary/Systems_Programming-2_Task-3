@@ -80,7 +80,7 @@ void Validator::validatePlayer() {
          For loop that iterates over the adjacent vertices of the current vertex
          and checks if there is a settlement on any of them
         */ 
-        for (int adjacentVertex : vertex.adjacentVertices) {
+        for (int adjacentVertex : vertex.getAdjacentVertices()) {
             if (boardRef.vertices.at(adjacentVertex).isOccupied()) { 
                 valid = false;
                 throw std::runtime_error("There is a settlement on an adjacent vertex");

@@ -32,7 +32,7 @@ int main() {
     // }
     p1.status();
     p1.placeSettlement(0);
-    p1.placeSettlement(1);
+    p1.placeSettlement(0);
     p1.upgradeSettlementToCity(0);
     // p1.useDevelopmentCard("Monopoly Ore");
     // p1.useDevelopmentCard("RoadBuilding 0 1");

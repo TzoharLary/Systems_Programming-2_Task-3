@@ -1,5 +1,6 @@
 #include "Vertex.hpp"
 #include "Player.hpp"
+
 using VertexType = Vertex::VertexType;
 
 
