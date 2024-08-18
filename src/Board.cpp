@@ -343,8 +343,6 @@ std::vector<int> Board::getAdjacentTiles(int tileIndex) const {
     return tiles[tileIndex].adjacentTiles;
 }
 
-
-
 vector<std::unique_ptr<DevelopmentCard>>& Board::getDeck() {
     return developmentCards;
 }

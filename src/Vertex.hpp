@@ -22,11 +22,11 @@ private:
     void setPlayer(Player* p);
     void setType(VertexType newType);
     void setVertexProperties(VertexType newType, Player* p);
+    void setAdjacentVertices(const vector<int>& vertices);
     friend class Player;
     friend class Board;
 
 public:
-    void setAdjacentVertices(const vector<int>& vertices);
     std::vector<int> getAdjacentVertices() const;
     string getPlayerName() const;
     bool isOccupied() const;
