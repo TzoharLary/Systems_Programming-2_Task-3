@@ -12,7 +12,11 @@ class DevelopmentCard {
 public:
     virtual ~DevelopmentCard() {}
     virtual std::string getType() const = 0;
-    // This is a pure virtual function, meaning that it must be implemented by any derived class
+    /*  This is a pure virtual function, meaning that it must be implemented by any derived class
+        we do a virtual function because we want to be able to call this function on a different type of development card
+        for example, the applyBenefit function of MonopolyCard would like to receive a vector of resource types, 
+        while the applyBenefit function of RoadBuildingCard would like to receive a pair of road indices
+    */ 
     virtual void applyBenefit(Player* player, const std::variant<std::vector<ResourceType>, std::pair<int, int>>& benefit) = 0;
 protected:    
     map<ResourceType, int> cost = { {ResourceType::ORE, 1}, {ResourceType::WHEAT, 1}, {ResourceType::SHEEP, 1} };

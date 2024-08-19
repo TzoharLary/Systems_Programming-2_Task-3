@@ -60,7 +60,7 @@ void Validator::validatePlayer() {
 
     if (functionName == "placeSettlement") {
         // Check if the player has more than 5 settlements
-        if (player->settlements.size() >= 5) {
+        if (player->getNumOfSettlements() >= 5) {
             valid = false;
             throw std::runtime_error("Player cannot have more than 5 settlements.");
         }
@@ -101,7 +101,7 @@ void Validator::validatePlayer() {
             throw std::runtime_error("The road is already occupied by " + road.getPlayerName());
         }
         // Check if the player has any settlements
-        if (player->settlements.size() < 0) {
+        if (player->getNumOfSettlements() < 0) {
             valid = false;
             throw std::runtime_error("You must have at least one settlement to build a road.");
         }
@@ -133,7 +133,7 @@ void Validator::validatePlayer() {
 
     } else if (functionName == "upgradeSettlementToCity") {
 
-        if (player->settlements.size() < 0) {
+        if (player->getNumOfSettlements() < 0) {
             valid = false;
             throw std::runtime_error("You must have at least one settlement to upgrade to a city.");
         }

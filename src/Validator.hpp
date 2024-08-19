@@ -11,9 +11,8 @@ class Tile;
 class Vertex;
 
 class Validator {
-public:
-    Validator(const string& className, const string& functionName, void* obj, int index, Board& board);
-    bool isValid() const;
+
+
 private:
     string className;
     string functionName;
@@ -22,15 +21,19 @@ private:
     Board& board; // פרמטר נוסף לבדיקת לוח
     bool valid;
     void validate();
-    void validatePlayer();
 
+    friend class Board;
     /*
     void validateBoard();
     void validateRoad();
     void validateTile();
     void validateVertex();
     */
-    
+public:
+    Validator(const string& className, const string& functionName, void* obj, int index, Board& board);
+    bool isValid() const;
+    void validatePlayer();
+        
 };
 
 #endif // VALIDATOR_H

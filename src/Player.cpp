@@ -1,6 +1,5 @@
 #include "Player.hpp"
 #include "Board.hpp"
-#include "Validator.hpp"
 #include "DevelopmentCard.hpp"
 #include <vector>
 
@@ -145,9 +144,6 @@ void Player::placeSettlement(int vertexIndex) {
             addResource(tile->getResource(), 1);
         }
     }
-
-    // vertex.setPlayer(this); // Set the player of the vertex to the current player
-    // vertex.setType(Vertex::VertexType::SETTLEMENT); // Set the type of the vertex to a settlement
     vertex.setVertexProperties(Vertex::VertexType::SETTLEMENT, this);
     this->settlements.push_back(vertexIndex); // Add the settlement to the player's list of settlements
     this -> incrementPoints(); // Settlement is worth 1 point
@@ -214,15 +210,6 @@ void Player::upgradeSettlementToCity(int vertexIndex) {
     std::cout << "Player " << name << " upgraded a settlement to a city on vertex " << vertexIndex << std::endl;
 }
 
-bool Player::shearchDevelopmentCard(const std::string& type) const {
-    for (const auto& card : getDevelopmentCards()) {
-        if (card->getType() == type) {
-            return true;
-        }
-    }
-    return false;
-}
-
 void Player::Trade(Player& player, ResourceType give, int giveAmount, ResourceType take, int takeAmount) {
     // check if the player has the resources to trade
     std::map<ResourceType, int> cost = { {give, giveAmount} };
@@ -244,19 +231,12 @@ void Player::Trade(Player& player, ResourceType give, int giveAmount, ResourceTy
 }
 
 void Player::addResource(ResourceType resource, int amount) {
-    map<ResourceType, int> currentResources = getResources();
-    currentResources[resource] += amount;
-    setResources(currentResources);
+    resources[resource] += amount;
 }
 
 void Player::removeResource(ResourceType resource, int amount) {
-    map<ResourceType, int> currentResources = getResources();
-    if (currentResources[resource] >= amount) {
-        currentResources[resource] -= amount;
-        if (currentResources[resource] == 0) {
-            currentResources.erase(resource);
-        }
-        setResources(currentResources);
+    if (resources[resource] >= amount) {
+        resources[resource] -= amount;
     } else {
         throw std::runtime_error("Not enough resources");
     }
@@ -282,15 +262,15 @@ string Player::getName() const {
     return name;
 }
 
+int Player::getNumOfSettlements() const {
+    return settlements.size();
+}
 // Getter for resources
 map<ResourceType, int> Player::getResources() const {
     return resources;
 }
 
-// Setter for resources
-void Player::setResources(const map<ResourceType, int>& newResources) {
-    resources = newResources;
-}
+
 
 void Player::incrementKnightCount() {
     knightCount++;
@@ -338,23 +318,20 @@ void Player::decrementNumOfSettlements(int vertexIndex) {
     }
 }
 
-//the method of the development cards is not implemented yet
-
+// Getter for development cards of the player
 const std::vector<std::unique_ptr<DevelopmentCard>>& Player::getDevelopmentCards() const {
     return developmentCards;    
 }
 
 void Player::buyDevelopmentCard() {
+    // check if the player is not on the begin of the game
     // Check if the player has enough resources to buy a development card using method Buy
     Buy(Player::BuyType::DEVELOPMENT_CARD);
-
-
     auto& deck = board.getDeck();
     if (deck.empty()) {
         std::cerr << "No more development cards available." << std::endl;
         return;
     }
-
     // Add the card to the player's hand in random order
     addDevelopmentCard(std::move(deck.back()));
     deck.pop_back();

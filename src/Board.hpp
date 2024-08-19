@@ -30,7 +30,6 @@ private:
     vector<Vertex> vertices;
     vector<Road> roads;
     void addTile(int id, ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles);
-
     void createRoads(); 
     void createVertices();
     void createTiles();
@@ -45,7 +44,9 @@ private:
     // the unique_ptr is a smart pointer that will delete the object when it goes out of scope
     // and now we can use polymorphism with the development cards.
     vector<std::unique_ptr<DevelopmentCard>> developmentCards;
-
+    friend class Player;
+    friend class Validator;
+    friend void Tile::distributeResources(int rolledNumber, Board& board);
 
 public:
     Board();

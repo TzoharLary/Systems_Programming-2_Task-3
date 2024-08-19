@@ -356,6 +356,7 @@ vector<Road> Board::getRoads() const {
 }
 
 
+
 /* Functions for test purposes:
 
 */
