@@ -82,12 +82,11 @@ private:
     /*  Friend classes with explanations why they are friends:
     *  KnightCard: The KnightCard class needs to access to methods: incrementKnightCount, incrementPoints, and getKnightCount.
     *  VictoryPointCard: The VictoryPointCard class needs to access to methods: incrementPoints and incrementVictoryPoints.
-    *  DevelopmentCard: The DevelopmentCard class needs to access to methods: addDevelopmentCard, getDevelopmentCards, and setUsingRoadBuildingCard.
+    *  Vertex: The Vertex class needs to access to methods: decrementNumOfSettlements, incrementNumOfCity, and incrementVictoryPoints.
     
     */
     friend class KnightCard;
     friend class VictoryPointCard;
-    // friend class DevelopmentCard;
     friend class Vertex;
     friend void Validator::validatePlayer();
 
