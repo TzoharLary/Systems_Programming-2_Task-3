@@ -80,14 +80,12 @@ private:
     const std::vector<std::unique_ptr<DevelopmentCard>>& getDevelopmentCards() const;
 
     /*  Friend classes with explanations why they are friends:
-    *  KnightCard: The KnightCard class needs to access to methods: incrementKnightCount, incrementPoints, and getKnightCount.
-    *  VictoryPointCard: The VictoryPointCard class needs to access to methods: incrementPoints and incrementVictoryPoints.
-    *  Vertex: The Vertex class needs to access to methods: decrementNumOfSettlements, incrementNumOfCity, and incrementVictoryPoints.
-    
+    *   KnightCard: The KnightCard class needs to access to methods: incrementKnightCount, incrementPoints, and getKnightCount.
+    *   VictoryPointCard: The VictoryPointCard class needs to access to methods: incrementPoints and incrementVictoryPoints.
+    *   Validator: The validatePlayer method in the Validator class needs to access to methods: getNumOfSettlements, and getNumOfCity.
     */
     friend class KnightCard;
     friend class VictoryPointCard;
-    friend class Vertex;
     friend void Validator::validatePlayer();
 
 public:
