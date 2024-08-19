@@ -27,9 +27,8 @@ class DevelopmentCard;
 class Player {
 
 private:
- 
-    // we create a field that hold the development cards of the player
-    vector<unique_ptr<DevelopmentCard>> developmentCards;
+    // fields:
+    vector<unique_ptr<DevelopmentCard>> developmentCards;    // we create a field that hold the development cards of the player
     int knightCount;
     int victoryPoints;
     Board& board;
@@ -38,7 +37,7 @@ private:
     map<ResourceType, int> resources; 
     vector<int> settlements; // List of settlement vertex indices
     int Citys; // List of Citys vertex indices
-    bool usingRoadBuildingCard = false;
+    bool usingRoadBuildingCard = false; // bool value to determine if the player is using a road building card or not (using at placeRoad function)
     enum BuyType { ROAD, SETTLEMENT, CITY, DEVELOPMENT_CARD };
     void Buy(BuyType type);
 

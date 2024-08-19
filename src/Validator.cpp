@@ -22,6 +22,22 @@ Validator::Validator(const string& className, const string& functionName, void* 
     validate();
 }
 
+/* This method is responsible for validating objects based on their class type.
+ * 
+ * The `validate()` method dynamically checks the class name 
+ * stored in the `className` member
+ * and calls the appropriate validation method for that class. 
+ * 
+ * If a validation method throws an exception, the exception is 
+ * caught, and the `valid` flag is set to false, 
+ * indicating that the validation has failed.
+ * 
+ * This method provides a flexible and extendable mechanism to validate different objects
+ * within the application, making it easier to maintain and scale the validation logic as new classes are added.
+ * 
+ * The structure of this method allows it to be easily expanded in the future to handle additional classes
+ * by adding more `else if` blocks or similar constructs. 
+ */
 void Validator::validate() {
     try
     {        
