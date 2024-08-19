@@ -26,6 +26,10 @@ class Player;
 
 class Board {
 private:
+    vector<Tile> tiles;
+    vector<Vertex> vertices;
+    vector<Road> roads;
+    void addTile(int id, ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles);
 
     void createRoads(); 
     void createVertices();
@@ -44,19 +48,10 @@ private:
 
 
 public:
-    //~Board(); // Destructor for cleaning up memory after the game ends
     Board();
-    Board(const Board&) = delete; // נטרול בנאי העתקה
-    Board& operator=(const Board&) = delete; // נטרול פעולת השמה מעתיקה
-    Board(Board&&) = default; // בנאי העברה ברירת מחדל
-    Board& operator=(Board&&) = default; // פעולת השמה מעבירה ברירת מחדל
-    vector<Tile> tiles;
-    vector<Vertex> vertices;
-    vector<Road> roads;
     vector<Road> getRoads() const;
     vector<Tile*> getTilesForVertex(int vertexIndex);
     Tile getTile(int index) const;
-    void addTile(int id, ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles);
     vector<int> getAdjacentTiles(int tileIndex) const;
     vector<int> getAdjacentVertices(int vertexIndex) const;
     void printAdjacent(int index, bool isTile) const;
