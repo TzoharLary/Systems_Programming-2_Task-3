@@ -19,11 +19,11 @@ int main() {
 
     globalCatan = &catan;
 
-    for (ResourceType r : {ResourceType::ORE, ResourceType::BRICK, ResourceType::WOOD, ResourceType::WHEAT, ResourceType::SHEEP}) {
-        p1.addResource(r, 100);
-        p2.addResource(r, 10);
-        p3.addResource(r, 10);
-    }
+    // for (ResourceType r : {ResourceType::ORE, ResourceType::BRICK, ResourceType::WOOD, ResourceType::WHEAT, ResourceType::SHEEP}) {
+    //     p1.addResource(r, 100);
+    //     p2.addResource(r, 10);
+    //     p3.addResource(r, 10);
+    // }
     // p2.status();
     // p3.status();
 

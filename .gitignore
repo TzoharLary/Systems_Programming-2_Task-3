@@ -29,3 +29,6 @@ src/icon
 
 # Ignore Mac-specific files
 *.DS_Store
+
+# Ignore Visual Studio Code files
+Doxfile

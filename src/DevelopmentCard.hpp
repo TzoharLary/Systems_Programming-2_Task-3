@@ -3,7 +3,7 @@
 
 #include <string>
 #include "Tile.hpp"
-#include "Player.hpp"
+// #include "Player.hpp"
 
 class Catan;
 extern Catan* globalCatan;
@@ -19,7 +19,7 @@ public:
     */ 
     virtual void applyBenefit(Player* player, const std::variant<std::vector<ResourceType>, std::pair<int, int>>& benefit) = 0;
 protected:    
-    map<ResourceType, int> cost = { {ResourceType::ORE, 1}, {ResourceType::WHEAT, 1}, {ResourceType::SHEEP, 1} };
+    std::map<ResourceType, int> cost = { {ResourceType::ORE, 1}, {ResourceType::WHEAT, 1}, {ResourceType::SHEEP, 1} };
 };
 
 

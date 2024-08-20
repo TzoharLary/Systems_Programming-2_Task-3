@@ -313,19 +313,19 @@ void Board::addTile(int id, ResourceType resource, int number, const vector<Vert
     tiles.push_back(newTile);
 }
 
+// i search in all the Tiles the Tile that hold the vertex with the index vertexIndex
 vector<Tile*> Board::getTilesForVertex(int vertexIndex) {
-
     vector<Tile*> tilesForVertex;
     // Iterate over all the tiles in the board
-    for (Tile& tile : tiles) {
+    for (Tile& CurrentTile : tiles) {
         // Iterate over all the vertices of the tile and check if the vertexIndex matches
         // the cast to int is necessary because the size() method returns an unsigned integer
-        for (int i = 0; i < static_cast<int>(tile.vertices.size()); ++i) {
+        for (int i = 0; i < static_cast<int>(CurrentTile.getVerticesSize()); ++i) {
             // create a pointer to the current vertex in the tile
-            Vertex* vertex = tile.getVertex(i);
+            const Vertex* vertex = CurrentTile.getVertex(i);
             // Check if the vertex is not null and the index matches the vertexIndex
             if (vertex->getId() == vertexIndex) {
-                tilesForVertex.push_back(&tile);
+                tilesForVertex.push_back(&CurrentTile);
                 break;
             }
         }
@@ -344,7 +344,7 @@ std::vector<int> Board::getAdjacentTiles(int tileIndex) const {
     if (tileIndex < 0 || tileIndex >= static_cast<int>(tiles.size())) {
         throw std::out_of_range("Invalid tile index");
     }
-    return tiles[tileIndex].adjacentTiles;
+    return tiles[tileIndex].getAdjacentTiles();
 }
 
 vector<std::unique_ptr<DevelopmentCard>>& Board::getDeck() {
@@ -355,7 +355,25 @@ vector<Road> Board::getRoads() const {
     return roads;
 }
 
-
+void Board::distributeResources(int rolledNumber) {
+    // auto& tile: Indicates that the variable tile is a reference to the original variable within the vector board.tiles, preventing unnecessary copying of the tile.
+    // const auto& vertex: Indicates that the variable vertex is a const reference to the original Vertex object within the vector tile.vertices, preventing unintended modification and unnecessary copying.
+    for (auto& tile : tiles) {
+        if (tile.getNumber() != rolledNumber) {
+            continue;
+        }
+        for (const auto& vertex : tile.getVertices()) {
+            if (vertex.isOccupied()) {
+                Player* PlayerOnThisTile = vertex.getPlayer();
+                if (vertex.getType() == Vertex::VertexType::SETTLEMENT) {
+                    PlayerOnThisTile->addResource(tile.getResource(), 1);
+                } else if (vertex.getType() == Vertex::VertexType::CITY) {
+                    PlayerOnThisTile->addResource(tile.getResource(), 2);
+                }
+            }
+        }
+    }
+}
 
 /* Functions for test purposes:
 

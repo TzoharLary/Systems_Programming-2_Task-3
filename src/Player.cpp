@@ -1,12 +1,10 @@
 #include "Player.hpp"
-#include "Board.hpp"
-#include "DevelopmentCard.hpp"
 #include <vector>
 
 
 Player::Player(const string &name, Board& board) :   knightCount(0), victoryPoints(0), board(board), name(name), points(0), Citys(0) {
     for (int i = WOOD; i <= ORE; ++i) {
-        resources[static_cast<ResourceType>(i)] = 0;
+        resources[static_cast<ResourceType>(i)] = 100;
     }
     
 }

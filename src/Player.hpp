@@ -11,6 +11,11 @@
 #include <chrono>
 #include <sstream>
 #include "Validator.hpp"
+#include "Board.hpp"
+#include "DevelopmentCard.hpp"
+
+
+
 using std::string;
 using std::map;
 using std::vector;
@@ -21,23 +26,33 @@ using std::find;
 using std::out_of_range;
 using std::unique_ptr;
 
-class Board;
 class DevelopmentCard;
 
 class Player {
 
 private:
-    // fields:
-    vector<unique_ptr<DevelopmentCard>> developmentCards;    // we create a field that hold the development cards of the player
+    /* Fields:
+    *  developmentCards: The development cards of the player
+    *  knightCount: The number of knights the player has
+    *  victoryPoints: The number of victory points the player has
+    *  board: The board object
+    *  name: The name of the player
+    *  points: The number of points the player has
+    *  resources: Map that holds the player's resources and the amount of each resource
+    *  settlements: The index of the settlements the player has
+    *  Citys: The number of cities the player has
+    *  usingRoadBuildingCard: A bool value to determine if the player is using a road building card or not
+    */
+    vector<unique_ptr<DevelopmentCard>> developmentCards;   
     int knightCount;
     int victoryPoints;
     Board& board;
     string name;
     int points;
     map<ResourceType, int> resources; 
-    vector<int> settlements; // List of settlement vertex indices
-    int Citys; // List of Citys vertex indices
-    bool usingRoadBuildingCard = false; // bool value to determine if the player is using a road building card or not (using at placeRoad function)
+    vector<int> settlements; 
+    int Citys; 
+    bool usingRoadBuildingCard = false;
     enum BuyType { ROAD, SETTLEMENT, CITY, DEVELOPMENT_CARD };
     void Buy(BuyType type);
 
@@ -48,6 +63,7 @@ private:
     *  stringToResourceType: Helper function to convert a string to a ResourceType
     *  addResource: Add resources to the player
     */ 
+    void addResource(ResourceType resource, int amount); 
     void removeResource(ResourceType resource, int amount); // Remove resources from the player
     bool checkResources(const map<ResourceType, int>& cost);// Helper function to check if the player has enough resources to buy something
     string resourceTypeToString(ResourceType type) const;
@@ -86,7 +102,9 @@ private:
     friend class KnightCard;
     friend class VictoryPointCard;
     friend void Validator::validatePlayer();
-
+    friend void Board::distributeResources(int rolledNumber);
+    friend void YearOfPlentyCard::applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit);
+    
 public:
 
     /* Constructor, Trade, and status functions with explanations:
@@ -133,7 +151,6 @@ public:
     int getNumOfSettlements() const;
 
     // i leave for now this function in public for test myself in the main
-    void addResource(ResourceType resource, int amount); 
 };
 
 #endif // PLAYER_HPP

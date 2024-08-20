@@ -46,7 +46,8 @@ private:
     vector<std::unique_ptr<DevelopmentCard>> developmentCards;
     friend class Player;
     friend class Validator;
-    friend void Tile::distributeResources(int rolledNumber, Board& board);
+
+    void distributeResources(int rolledNumber);
 
 public:
     Board();
