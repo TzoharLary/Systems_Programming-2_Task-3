@@ -3,7 +3,8 @@
 #include <cstdlib>
 #include <ctime>
 
-Catan::Catan(Player &p1, Player &p2, Player &p3, Board& board) : player1(p1), player2(p2), player3(p3), board(board) {
+Catan::Catan(Player &p1, Player &p2, Player &p3, Board& board) : player1(p1), player2(p2), player3(p3), board(board), currentTurn(0), phase(FirstRound) {
+    ChooseStartingPlayer();
     std::srand(std::time(0));
 }
 
@@ -27,7 +28,38 @@ std::vector<Player*> Catan::getPlayers() {
     return { &player1, &player2, &player3 };
 }
 
+Player* Catan::getCurrentPlayer() const {
+    return currentPlayer;
+}
 
+void Catan::advanceTurn() {
+    // this is the first round of placing settlements
+    if (isFirstRound()) {
+        if (phase == FirstRound) {
+            currentTurn++;
+            if (currentTurn == 3) {
+                phase = SecondRound;
+                currentTurn = 2;
+            }
+        // this is the second round of placing settlements
+        } else if (phase == SecondRound) {
+            currentTurn--;
+            if (currentTurn < 0) {
+                phase = RegularPlay;
+                currentTurn = 0;
+            }
+        }
+    // this is the regular play phase
+    } else {
+        currentTurn = (currentTurn + 1) % 3;
+    }
+
+    currentPlayer = (currentTurn == 0) ? &player1 : (currentTurn == 1) ? &player2 : &player3;
+}
+
+bool Catan::isFirstRound() {
+    return (player1.getPoints() < 3 && player2.getPoints() < 3 && player3.getPoints() < 3);
+}
 
 void Catan::printWinner() const {
     if (player1.getPoints() >= 100) {
@@ -40,3 +72,5 @@ void Catan::printWinner() const {
         std::cout << "No winner yet." << std::endl;
     }
 }
+
+

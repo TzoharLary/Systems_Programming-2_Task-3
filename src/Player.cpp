@@ -71,6 +71,10 @@ void Player::Buy(BuyType type) {
     }
 }
 
+bool Player::afterStartGame() const {
+    return getPoints() > 2;
+}
+
 bool Player::checkResources(const map<ResourceType, int>& cost) {
     bool hasAllResources = true;
     for (const auto& item : cost) {
@@ -131,9 +135,14 @@ void Player::placeSettlement(int vertexIndex) {
     // that the player dont need to buy the settlement because he gets it for free
    
     // If this is not the start of the game
-    if(this->getPoints() > 2){
-         Buy(Player::BuyType::SETTLEMENT);
+    if (afterStartGame()) {
+        // Check if the player has enough resources to buy a settlement
+        Buy(Player::BuyType::SETTLEMENT);
+        
     }
+    // if(this->getPoints() > 2){
+    //      Buy(Player::BuyType::SETTLEMENT);
+    // }
     // If this is the start of the game
     else{
         // Get the tiles that are associated with the vertex that we built the settlement on

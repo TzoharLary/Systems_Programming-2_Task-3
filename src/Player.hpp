@@ -63,7 +63,7 @@ private:
     bool usingRoadBuildingCard = false;
     enum BuyType { ROAD, SETTLEMENT, CITY, DEVELOPMENT_CARD };
     void Buy(BuyType type);
-
+    bool afterStartGame() const;   
     /* Resource functions with explanations:
     *  removeResource: Remove resources from the player
     *  checkResources: Helper function to check if the player has enough resources to buy something
@@ -124,7 +124,6 @@ public:
     Player(const string& name, Board& board); // constructor 
     void Trade(Player& player, ResourceType give, int giveAmount, ResourceType take, int takeAmount);  
     void status() const;
-
     /* Place functions with explanations:
     *  placeSettlement: Place a settlement on the board
     *  placeRoad: Place a road on the board

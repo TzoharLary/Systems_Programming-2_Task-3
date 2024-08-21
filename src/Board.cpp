@@ -262,21 +262,34 @@ void Board::createTiles() {
 }
 
 void Board::createDevelopmentCards() {
-    for (int i = 0; i < 5; ++i) {
+    developmentCards.reserve(25); 
+    const int maxVictoryPointCards = 5;
+    const int maxYearOfPlentyCards = 2;
+    const int maxRoadBuildingCards = 2;
+    const int maxKnightCards = 14;
+    const int maxMonopolyCards = 2;
+
+    if (developmentCards.size() + maxVictoryPointCards + maxYearOfPlentyCards +
+        maxRoadBuildingCards + maxKnightCards + maxMonopolyCards > developmentCards.capacity()) {
+        throw std::runtime_error("You cannot create more development cards for the deck, \n the Board is already create the exact amount of development cards");
+    }
+
+    for (int i = 0; i < maxVictoryPointCards; ++i) {
         developmentCards.push_back(std::make_unique<VictoryPointCard>());
     }
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < maxYearOfPlentyCards; ++i) {
         developmentCards.push_back(std::make_unique<YearOfPlentyCard>());
     }
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < maxRoadBuildingCards; ++i) {
         developmentCards.push_back(std::make_unique<RoadBuildingCard>());
     }
-    for (int i = 0; i < 14; ++i) {
+    for (int i = 0; i < maxKnightCards; ++i) {
         developmentCards.push_back(std::make_unique<KnightCard>());
     }
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < maxMonopolyCards; ++i) {
         developmentCards.push_back(std::make_unique<MonopolyCard>());
     }
+
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(developmentCards.begin(), developmentCards.end(), g);

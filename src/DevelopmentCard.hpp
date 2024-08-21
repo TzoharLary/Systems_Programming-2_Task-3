@@ -25,9 +25,6 @@ private:
 public:
     virtual ~DevelopmentCard() {}
     virtual std::string getType() const = 0;
-
-protected:    
-    std::map<ResourceType, int> cost = { {ResourceType::ORE, 1}, {ResourceType::WHEAT, 1}, {ResourceType::SHEEP, 1} };
 };
 
 
@@ -76,7 +73,6 @@ public:
     YearOfPlentyCard() = default;
     std::string getType() const override;
 };
-// Function to create a random development card
-DevelopmentCard* createRandomDevelopmentCard();
+
 
 #endif // DEVELOPMENT_CARD_HPP

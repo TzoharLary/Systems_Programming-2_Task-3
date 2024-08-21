@@ -108,14 +108,3 @@ void VictoryPointCard::applyBenefit(Player* player, const std::variant<vector<Re
     player->incrementVictoryPoints();
 }
 
-DevelopmentCard* createRandomDevelopmentCard() {
-    int cardType = rand() % 5; // Adjust based on actual probabilities
-    switch (cardType) {
-        case 0: return new MonopolyCard();
-        case 1: return new RoadBuildingCard();
-        case 2: return new YearOfPlentyCard();
-        case 3: return new KnightCard();
-        case 4: return new VictoryPointCard();
-        default: return nullptr;
-    }
-}
