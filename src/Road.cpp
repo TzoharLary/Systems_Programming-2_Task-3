@@ -3,12 +3,12 @@
 #include "Player.hpp"
 #include <iostream>
 
-Road::Road(int id) : id(id), player(nullptr) {}
+Road::Road(int id) : id(id), OwnerPlayer(nullptr) {}
 
 std::string Road::getPlayerName() const {
     // the condition is know that if the player is nullptr so he go to else
-    if (player) {
-        return player->getName();
+    if (OwnerPlayer) {
+        return OwnerPlayer->getName();
     } else {
         return "No player";
     }
@@ -31,14 +31,14 @@ void Road::setAdjacentRoads(const vector<int>& roads) {
 }
 
 bool Road::isOccupied() const {
-    return player != nullptr;
+    return OwnerPlayer != nullptr;
 }
 
 void Road::setPlayer(Player* p) {
-    if (this->Occupied && this->player) {
+    if (this->Occupied && this->OwnerPlayer) {
         throw std::runtime_error("This road is already occupied by another player: " + this->getPlayerName());
     }
-    player = p;
+    OwnerPlayer = p;
     Occupied = (p != nullptr);
 }
 

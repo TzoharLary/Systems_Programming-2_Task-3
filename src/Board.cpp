@@ -2,11 +2,9 @@
 #include <stdexcept>
 #include <vector>
 #include "Player.hpp"
-#include "DevelopmentCard.hpp"
 #include <random>
 #include <algorithm>
 #include <memory>
-
 
 
 Board::Board() {
@@ -176,14 +174,6 @@ void Board::createRoads() {
 }
 
 void Board::createVertices() {
-    // for (int i = 0; i < 54; i++) { 
-    //     // assume 54 vertices
-    //     // We used emplace() instead of insert() because
-    //     // we want to construct the Vertex object in place
-    //     // and avoid copying it from a temporary object
-    //     // the next line creates a new Vertex object with the given id
-    //     vertices.emplace_back(i); 
-    // }
     for (int i = 0; i < 54; i++) { 
         Vertex v(i);          // יצירת אובייקט Vertex עם id
         vertices.push_back(v);  // הוספת האובייקט ל-vector עם העתקה

@@ -3,7 +3,12 @@
 
 #include <string>
 #include "Tile.hpp"
+#include "Vertex.hpp"
 // #include "Player.hpp"
+
+/* Explanation of includes in DevelopmentCard.hpp:
+*  We include the Tile.hpp because we want to use the ResourceType enum in the DevelopmentCard class.
+*/
 
 class Catan;
 extern Catan* globalCatan;

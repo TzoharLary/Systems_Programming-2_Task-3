@@ -4,8 +4,12 @@
 #include <vector>
 #include <map>
 #include "Vertex.hpp"
-#include "Road.hpp"
 using std::vector;
+
+/* Explanation of includes in Tile.hpp:
+*  We include the Vertex.hpp file in the Tile.hpp file
+   because we need to create a field of vertices that we create on the tile that the players can build on.
+*/
 
 enum ResourceType { WOOD, BRICK, SHEEP, WHEAT, ORE, DESERT };
 
@@ -22,11 +26,11 @@ private:
     *  TileVertices: The vertices that are on the tile
     *  adjacentTiles: The adjacent tiles to the tile
     */
-    int TileId; // tile id
+    int TileId; 
     ResourceType TileResource;
     int TileNumber;
-    vector<Vertex> TileVertices; // hold the vertices that are on the tile
-    vector<int> adjacentTiles; //  hold the number of the adjacent tiles id to the tile
+    vector<Vertex> TileVertices;
+    vector<int> adjacentTiles; 
 
 
 

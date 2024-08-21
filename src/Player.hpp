@@ -1,9 +1,9 @@
+
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
 #include <string>
 #include <map>
-#include "Tile.hpp" 
 #include <stdexcept>
 #include <iostream>
 #include <algorithm>
@@ -12,9 +12,17 @@
 #include <sstream>
 #include "Validator.hpp"
 #include "Board.hpp"
-#include "DevelopmentCard.hpp"
+// #include "DevelopmentCard.hpp"
 
+/* Explanation of includes in Player.hpp and not in Player.cpp:
+*  We include the Validator.hpp because we want that the validatePlayer method
+   be a friend of the Player for using private methods of the Player class.
+*  We include the Board.hpp because we want that the distributeResources method
+   be a friend of the Player for using private methods of the Player class.
+*  We include the DevelopmentCard.hpp because we want that the YearOfPlentyCard, KnightCard, and VictoryPointCard classes
+   be a friend of the Player for using private methods of the Player class.
 
+*/
 
 using std::string;
 using std::map;
@@ -26,7 +34,7 @@ using std::find;
 using std::out_of_range;
 using std::unique_ptr;
 
-class DevelopmentCard;
+// class Board;
 
 class Player {
 
@@ -104,7 +112,7 @@ private:
     friend void Validator::validatePlayer();
     friend void Board::distributeResources(int rolledNumber);
     friend void YearOfPlentyCard::applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit);
-    
+
 public:
 
     /* Constructor, Trade, and status functions with explanations:

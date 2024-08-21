@@ -25,6 +25,7 @@ private:
     void setAdjacentVertices(const vector<int>& vertices);
     Vertex(int idx); 
     friend class Player;
+    // friend void Player::placeSettlement(int vertexIndex);
     friend class Board;
 
 public:

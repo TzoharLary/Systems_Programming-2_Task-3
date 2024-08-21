@@ -3,15 +3,20 @@
 
 #include <vector>
 #include <map>
-#include "Tile.hpp"
-#include "Vertex.hpp"
-#include "Road.hpp"
 #include "DevelopmentCard.hpp"
+#include "Road.hpp"
 #include <iostream>
 #include <iterator>
 #include <memory>
 #include <algorithm>
 #include <random>
+/* Explanation of includes in Board.hpp and not in Board.cpp:
+*  We include the DevelopmentCard.hpp file in the Board.hpp file 
+   because we need to create a field of development cards that we create on the board that the players can buy.
+   the mean is that we need it for dreate a deck of development cards that the players can buy.
+*  We include the Road.hpp file in the Board.hpp file
+   because we need to create a field of roads that we create on the board that the players can build on.
+*/
 using std::vector;
 using std::map;
 using std::ostream_iterator;
@@ -51,8 +56,8 @@ private:
 
 public:
     Board();
-    vector<Road> getRoads() const;
     vector<Tile*> getTilesForVertex(int vertexIndex);
+    vector<Road> getRoads() const;
     Tile getTile(int index) const;
     vector<int> getAdjacentTiles(int tileIndex) const;
     vector<int> getAdjacentVertices(int vertexIndex) const;

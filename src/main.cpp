@@ -30,21 +30,48 @@ int main() {
     // for (int i = 0; i < 25; i++) {
     //     p1.buyDevelopmentCard();   
     // }
-    p1.status();
-    p1.placeSettlement(0);
-    p1.placeSettlement(0);
-    p1.upgradeSettlementToCity(0);
+    // p1.status();
+    // p1.placeSettlement(0);
+    // p1.placeSettlement(0);
+    // p1.upgradeSettlementToCity(0);
     // p1.useDevelopmentCard("Monopoly Ore");
     // p1.useDevelopmentCard("RoadBuilding 0 1");
     // p1.useDevelopmentCard("YearOfPlenty Ore Wheat");
     // p1.useDevelopmentCard("Knight");
     // p1.placeSettlement(2);
     // p1.placeRoad(1);
-    p1.status();
+    // p1.status();
 
 
+    /* test for place a road not connected to a settlement 
+    // 1. place a road near nothing
+    p1.placeRoad(1);
+    */
 
-  
+    /*
+    2. place a road near a settlement that not  belong to the player
+    p1.placeSettlement(2);
+    p2.placeRoad(1);
+    */
+
+    /* test for place a road not near anothe road of the player
+            p1.placeSettlement(2);
+            p1.placeRoad(1);
+            p2.placeRoad(0);
+    */
+
+    /* test for
+    */
+    
+    /* test for
+    */
+    
+    /* test for
+    */
+    
+    /* test for
+    */
+    
     /*
     printf("after creating the first settlement and road of p1\n");
     p1.placeSettlement(2, board);
