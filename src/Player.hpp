@@ -107,11 +107,12 @@ private:
     *   VictoryPointCard: The VictoryPointCard class needs to access to methods: incrementPoints and incrementVictoryPoints.
     *   Validator: The validatePlayer method in the Validator class needs to access to methods: getNumOfSettlements, and getNumOfCity.
     */
+    // friend class DevelopmentCard;
     friend class KnightCard;
     friend class VictoryPointCard;
+    friend class YearOfPlentyCard;
     friend void Validator::validatePlayer();
     friend void Board::distributeResources(int rolledNumber);
-    friend void YearOfPlentyCard::applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit);
 
 public:
 

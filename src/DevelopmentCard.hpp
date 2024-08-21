@@ -4,7 +4,6 @@
 #include <string>
 #include "Tile.hpp"
 #include "Vertex.hpp"
-// #include "Player.hpp"
 
 /* Explanation of includes in DevelopmentCard.hpp:
 *  We include the Tile.hpp because we want to use the ResourceType enum in the DevelopmentCard class.
@@ -12,17 +11,21 @@
 
 class Catan;
 extern Catan* globalCatan;
+class Player;
 
 class DevelopmentCard {
-public:
-    virtual ~DevelopmentCard() {}
-    virtual std::string getType() const = 0;
+private:
     /*  This is a pure virtual function, meaning that it must be implemented by any derived class
         we do a virtual function because we want to be able to call this function on a different type of development card
         for example, the applyBenefit function of MonopolyCard would like to receive a vector of resource types, 
         while the applyBenefit function of RoadBuildingCard would like to receive a pair of road indices
     */ 
     virtual void applyBenefit(Player* player, const std::variant<std::vector<ResourceType>, std::pair<int, int>>& benefit) = 0;
+    friend class Player;
+public:
+    virtual ~DevelopmentCard() {}
+    virtual std::string getType() const = 0;
+
 protected:    
     std::map<ResourceType, int> cost = { {ResourceType::ORE, 1}, {ResourceType::WHEAT, 1}, {ResourceType::SHEEP, 1} };
 };
@@ -30,40 +33,49 @@ protected:
 
 
 class MonopolyCard : public DevelopmentCard {
+private:
+    void applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) override;
+
 public:
     MonopolyCard() = default;
     std::string getType() const override;
-    void applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) override;
 };
 
 class RoadBuildingCard : public DevelopmentCard {
+private:
+    void applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) override;
 public:
     RoadBuildingCard() = default;
     std::string getType() const override;
-    void applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) override;
 };
 
-class YearOfPlentyCard : public DevelopmentCard {
-public:
-    YearOfPlentyCard() = default;
-    std::string getType() const override;
-    void applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) override;
-};
+
 
 class KnightCard : public DevelopmentCard {
+private:
+    void applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) override;
 public:
     KnightCard() = default;
     std::string getType() const override;
-    void applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) override;
 };
 
+
+
 class VictoryPointCard : public DevelopmentCard {
+private:
+    void applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) override;
 public:
     VictoryPointCard() = default;
     std::string getType() const override;
-    void applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) override;
 };
 
+class YearOfPlentyCard : public DevelopmentCard {
+private:
+    void applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) override;
+public:
+    YearOfPlentyCard() = default;
+    std::string getType() const override;
+};
 // Function to create a random development card
 DevelopmentCard* createRandomDevelopmentCard();
 
