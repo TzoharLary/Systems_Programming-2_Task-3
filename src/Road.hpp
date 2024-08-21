@@ -15,14 +15,14 @@ private:
     Player* OwnerPlayer;   
     vector<int> betweenVertices; 
     void setPlayer(Player* p);
-    // void setBetweenVertices(const vector<int>& vertices);
+    void setBetweenVertices(const vector<int>& vertices);
+    void setAdjacentRoads(const vector<int>& roads);
 
-    // friend void Validator::validatePlayer();
-    // friend void Player::placeRoad(int roadIndex);
     friend class Player;
-    // friend class Board;
+    friend class Board;
 public:
-    // void setPlayer(Player* p);
+    // move this set to private + add friend class Board
+    // because this is the only class that using this set method
 
     vector<int> adjacentRoads;
     Road(int id);
@@ -32,11 +32,7 @@ public:
     string getPlayerName() const;
     int getId() const;    
     bool isOccupied() const;
-    // move this set to private + add friend class Board
-    // because this is the only class that using this set method
-    // void setBetweenVertices(const vector<int>& vertices);
-    void setAdjacentRoads(const vector<int>& roads);
-    void setBetweenVertices(const vector<int>& vertices);
+  
 
 };
 
