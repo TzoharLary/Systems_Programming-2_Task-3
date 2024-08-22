@@ -15,7 +15,6 @@ int main() {
     Player p3("Dana", board);
     Catan catan(p1, p2, p3, board);
 
-    catan.ChooseStartingPlayer();  // Randomly choose starting player.
 
     globalCatan = &catan;
 

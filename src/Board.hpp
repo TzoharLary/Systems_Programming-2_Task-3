@@ -49,11 +49,11 @@ private:
     // the unique_ptr is a smart pointer that will delete the object when it goes out of scope
     // and now we can use polymorphism with the development cards.
     vector<std::unique_ptr<DevelopmentCard>> developmentCards;
-    friend class Player;
-    friend class Validator;
+
 
     void distributeResources(int rolledNumber);
-
+    friend class Player;
+    friend class Validator;
 public:
     Board();
     vector<Tile*> getTilesForVertex(int vertexIndex);

@@ -12,6 +12,7 @@
 #include <sstream>
 #include "Validator.hpp"
 #include "Board.hpp"
+// #include "catan.hpp"
 // #include "DevelopmentCard.hpp"
 
 /* Explanation of includes in Player.hpp and not in Player.cpp:
@@ -34,7 +35,7 @@ using std::find;
 using std::out_of_range;
 using std::unique_ptr;
 
-// class Board;
+class catan;
 
 class Player {
 
@@ -63,7 +64,9 @@ private:
     bool usingRoadBuildingCard = false;
     enum BuyType { ROAD, SETTLEMENT, CITY, DEVELOPMENT_CARD };
     void Buy(BuyType type);
-    bool afterStartGame() const;   
+    bool afterStartGame = false;   
+    void setafterStartGame(bool value);
+
     /* Resource functions with explanations:
     *  removeResource: Remove resources from the player
     *  checkResources: Helper function to check if the player has enough resources to buy something
@@ -111,6 +114,7 @@ private:
     friend class KnightCard;
     friend class VictoryPointCard;
     friend class YearOfPlentyCard;
+    friend class Catan;
     friend void Validator::validatePlayer();
     friend void Board::distributeResources(int rolledNumber);
 

@@ -1,4 +1,5 @@
 #include "catan.hpp"
+#include "Player.hpp"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -58,7 +59,16 @@ void Catan::advanceTurn() {
 }
 
 bool Catan::isFirstRound() {
-    return (player1.getPoints() < 3 && player2.getPoints() < 3 && player3.getPoints() < 3);
+
+    if (player1.getPoints() < 3 && player2.getPoints() < 3 && player3.getPoints() < 3){
+        return true;
+    }
+    else {
+        player1.setafterStartGame(true);
+        player2.setafterStartGame(true);
+        player3.setafterStartGame(true);
+        return false;
+    }
 }
 
 void Catan::printWinner() const {

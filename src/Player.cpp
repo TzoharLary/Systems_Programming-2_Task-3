@@ -71,9 +71,7 @@ void Player::Buy(BuyType type) {
     }
 }
 
-bool Player::afterStartGame() const {
-    return getPoints() > 2;
-}
+
 
 bool Player::checkResources(const map<ResourceType, int>& cost) {
     bool hasAllResources = true;
@@ -135,7 +133,7 @@ void Player::placeSettlement(int vertexIndex) {
     // that the player dont need to buy the settlement because he gets it for free
    
     // If this is not the start of the game
-    if (afterStartGame()) {
+    if (afterStartGame) {
         // Check if the player has enough resources to buy a settlement
         Buy(Player::BuyType::SETTLEMENT);
         
@@ -294,6 +292,10 @@ bool Player::getUsingRoadBuildingCard() const {
 
 void Player::setUsingRoadBuildingCard(bool value) {
     usingRoadBuildingCard = value;
+}
+
+void Player::setafterStartGame(bool value) {
+    afterStartGame = value;
 }
 
 int Player::getNumOfRoads() const {

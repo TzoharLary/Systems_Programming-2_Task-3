@@ -2,8 +2,10 @@
 #define CATAN_HPP
 
 #include <vector>
-#include "Player.hpp"
+// #include "Player.hpp"
 #include "Board.hpp"
+
+class Player;
 
 class Catan {
 public:
