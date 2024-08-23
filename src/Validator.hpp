@@ -2,10 +2,11 @@
 #define VALIDATOR_H
 
 #include <string>
+#include "Board.hpp"
 using std::string;
 
 class Player;
-class Board;
+// class Board;
 class Road;
 class Tile;
 class Vertex;
@@ -20,6 +21,12 @@ private:
     int index; 
     Board& board; 
     bool valid;
+    // The next 5 fields are used for the trade validation
+    ResourceType giveResource;
+    int giveAmount;
+    ResourceType takeResource;
+    int takeAmount;
+    Player* otherPlayer;
     void validate(); // Validates objects based on their class type
 
     // The Board class need to access to method validatePlayer.
@@ -31,7 +38,7 @@ public:
     *  isValid: Returns the value of the valid variable.
     *  validatePlayer: Validates the player methods.
     */
-    Validator(const string& className, const string& functionName, void* obj, int index, Board& board);
+    Validator(const std::string& className, const std::string& functionName, void* obj, int index, Board& board, ResourceType giveResource = ResourceType::WOOD, int giveAmount = 0, ResourceType takeResource = ResourceType::BRICK, int takeAmount = 0, Player* otherPlayer = nullptr);
     bool isValid() const;
     void validatePlayer();
     /*

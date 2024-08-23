@@ -1,4 +1,3 @@
-
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
@@ -64,8 +63,10 @@ private:
     bool usingRoadBuildingCard = false;
     enum BuyType { ROAD, SETTLEMENT, CITY, DEVELOPMENT_CARD };
     void Buy(BuyType type);
+    bool isMyTurn = false;
     bool afterStartGame = false;   
     void setafterStartGame(bool value);
+    void setisMyTurn(bool value);
 
     /* Resource functions with explanations:
     *  removeResource: Remove resources from the player

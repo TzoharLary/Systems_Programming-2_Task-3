@@ -16,6 +16,7 @@ public:
     bool isFirstRound();
     void advanceTurn();
     Player* getCurrentPlayer() const;     
+    string getCurrentPlayerName() const;
 
 
 private:
@@ -27,7 +28,7 @@ private:
     Player *currentPlayer;
     int currentTurn;
     TurnPhase phase;
-    void ChooseStartingPlayer();
+    // void ChooseStartingPlayer();
 
 };
 

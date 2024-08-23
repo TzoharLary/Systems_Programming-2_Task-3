@@ -5,7 +5,9 @@
 #include <ctime>
 
 Catan::Catan(Player &p1, Player &p2, Player &p3, Board& board) : player1(p1), player2(p2), player3(p3), board(board), currentTurn(0), phase(FirstRound) {
-    ChooseStartingPlayer();
+    // ChooseStartingPlayer();
+    currentPlayer = &player1;
+    player1.setisMyTurn(true);
     std::srand(std::time(0));
 }
 
@@ -13,17 +15,21 @@ Board& Catan::getBoard() {
     return board;
 }
 
-void Catan::ChooseStartingPlayer() {
-    int randomPlayer = std::rand() % 3;
-    if (randomPlayer == 0) {
-        currentPlayer = &player1;
-    } else if (randomPlayer == 1) {
-        currentPlayer = &player2;
-    } else {
-        currentPlayer = &player3;
-    }
-    std::cout << "Starting player: " << currentPlayer->getName() << std::endl;
+string Catan::getCurrentPlayerName() const {
+    return currentPlayer->getName();
 }
+
+// void Catan::ChooseStartingPlayer() {
+//     int randomPlayer = std::rand() % 3;
+//     if (randomPlayer == 0) {
+//         currentPlayer = &player1;
+//     } else if (randomPlayer == 1) {
+//         currentPlayer = &player2;
+//     } else {
+//         currentPlayer = &player3;
+//     }
+//     std::cout << "Starting player: " << currentPlayer->getName() << std::endl;
+// }
 
 std::vector<Player*> Catan::getPlayers() {
     return { &player1, &player2, &player3 };
@@ -34,6 +40,10 @@ Player* Catan::getCurrentPlayer() const {
 }
 
 void Catan::advanceTurn() {
+    // set all players to not their turn
+    player1.setisMyTurn(false);
+    player2.setisMyTurn(false);
+    player3.setisMyTurn(false);
     // this is the first round of placing settlements
     if (isFirstRound()) {
         if (phase == FirstRound) {
@@ -56,8 +66,16 @@ void Catan::advanceTurn() {
     }
 
     currentPlayer = (currentTurn == 0) ? &player1 : (currentTurn == 1) ? &player2 : &player3;
+    // set the current player to their turn
+    currentPlayer->setisMyTurn(true);
+
 }
 
+/* if FirstRound explanation:
+*  if all players have less than 3 points, then it is the first round
+*  if not, then it is not the first round
+*  set all players to afterStartGame because the first round is over
+*/
 bool Catan::isFirstRound() {
 
     if (player1.getPoints() < 3 && player2.getPoints() < 3 && player3.getPoints() < 3){

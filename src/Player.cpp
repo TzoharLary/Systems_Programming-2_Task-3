@@ -23,6 +23,10 @@ void Player::status() const {
     for (const auto& resource : getResources()) {
         cout << "  " << resourceTypeToString(resource.first) << ": " << resource.second << endl;
     }
+    // print if this  is player turn or not, and if not, print the name of the player that is playing
+    if (isMyTurn) {
+        cout << "It is your turn" << endl;
+    } 
     // cout << "the development cards are: " << endl;
     // for (const auto& card : getDevelopmentCards()) {
     //     cout << "  " << card->getType() << endl;
@@ -114,6 +118,8 @@ ResourceType Player::stringToResourceType(const std::string& str) const {
     }
 }
 
+
+
 void Player::placeSettlement(int vertexIndex) {
 
     /* Validator object explanation:
@@ -138,9 +144,7 @@ void Player::placeSettlement(int vertexIndex) {
         Buy(Player::BuyType::SETTLEMENT);
         
     }
-    // if(this->getPoints() > 2){
-    //      Buy(Player::BuyType::SETTLEMENT);
-    // }
+
     // If this is the start of the game
     else{
         // Get the tiles that are associated with the vertex that we built the settlement on
@@ -173,7 +177,7 @@ void Player::placeRoad(int roadIndex) {
         cout << name << " placed a road on road " << roadIndex << endl;
         return;
     } 
-    if(this->getPoints() > 2){
+    if(afterStartGame){
         Buy(Player::BuyType::ROAD);
     }
     
@@ -217,11 +221,18 @@ void Player::upgradeSettlementToCity(int vertexIndex) {
 }
 
 void Player::Trade(Player& player, ResourceType give, int giveAmount, ResourceType take, int takeAmount) {
-    // check if the player has the resources to trade
-    std::map<ResourceType, int> cost = { {give, giveAmount} };
-    if (!checkResources(cost)) {
-        throw std::runtime_error("Not enough resources to trade.");
+    Validator validator("Player", "Trade", this, 0, board, give, giveAmount, take, takeAmount, &player);
+    if (!validator.isValid()) {
+        return;
     }
+
+
+  
+    // // check if the player has the resources to trade
+    // std::map<ResourceType, int> cost = { {give, giveAmount} };
+    // if (!checkResources(cost)) {
+    //     throw std::runtime_error("Not enough resources to trade.");
+    // }
 
     // remove the resources from the player
     this->removeResource(give, giveAmount);
@@ -296,6 +307,10 @@ void Player::setUsingRoadBuildingCard(bool value) {
 
 void Player::setafterStartGame(bool value) {
     afterStartGame = value;
+}
+
+void Player::setisMyTurn(bool value) {
+    isMyTurn = value;
 }
 
 int Player::getNumOfRoads() const {

@@ -17,10 +17,29 @@ using std::runtime_error;
 
 
 
-Validator::Validator(const string& className, const string& functionName, void* obj, int index,  Board& board)
-    : className(className), functionName(functionName), obj(obj), index(index), board(board) {
+Validator::Validator(const std::string& className,
+    const std::string& functionName,
+    void* obj,
+    int index, 
+    Board& board,
+    ResourceType giveResource, 
+    int giveAmount, 
+    ResourceType takeResource, 
+    int takeAmount,
+    Player* otherPlayer)
+    : className(className),
+    functionName(functionName),
+    obj(obj), 
+    index(index),
+    board(board), 
+    giveResource(giveResource),
+    giveAmount(giveAmount),
+    takeResource(takeResource), 
+    takeAmount(takeAmount),
+    otherPlayer(otherPlayer) {
     validate();
 }
+
 
 /* This method is responsible for validating objects based on their class type.
  * 
@@ -73,6 +92,12 @@ void Validator::validatePlayer() {
     Player* player = static_cast<Player*>(obj);
     Board& boardRef = board;
     valid = true;
+    // validate player turn
+    if(player->isMyTurn == false){
+        valid = false;
+        throw std::runtime_error("It is not your turn.");
+    }
+
 
     if (functionName == "placeSettlement") {
         // Check if the player has more than 5 settlements
@@ -110,6 +135,7 @@ void Validator::validatePlayer() {
             throw std::out_of_range("Invalid road index");
         }
 
+        
         Road& road = boardRef.roads.at(index);
         // Check if the road is already occupied
         if (road.isOccupied()) {
@@ -176,6 +202,36 @@ void Validator::validatePlayer() {
         }
         
     }
+    
+    else if (functionName == "Trade") {
+        // check if the player has the resources to trade
+        if (giveAmount > 0 && !player->checkResources({ {giveResource, giveAmount} })) {
+            valid = false;
+            throw std::runtime_error("You dont have enough resources to trade");
+        }
+
+        //  check if the other player has the resources to trade
+        if (otherPlayer != nullptr && takeAmount > 0 && !otherPlayer->checkResources({ {takeResource, takeAmount} })) {
+            valid = false;
+            throw std::runtime_error("The player you want to trade with doesn't have enough resources");
+        }
+    }
+    //  else if (functionName == "buyDevelopmentCard") {
+    //     // בדיקה אם השחקן יכול לקנות קלף פיתוח
+    //     if (!player->canBuyDevelopmentCard()) {
+    //         valid = false;
+    //         throw std::runtime_error("Player cannot buy a development card.");
+    //     }
+    //     // בדיקות נוספות לפי הצורך...
+    // } else if (functionName == "useDevelopmentCard") {
+    //     // בדיקה אם השחקן יכול להשתמש בקלף הפיתוח
+    //     if (!player->canUseDevelopmentCard(card)) {
+    //         valid = false;
+    //         throw std::runtime_error("Player cannot use this development card.");
+    //     }
+    //     // בדיקות נוספות לפי הצורך...
+    // }
+
 }
 
 /*

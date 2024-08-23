@@ -18,17 +18,13 @@ int main() {
 
     globalCatan = &catan;
 
-    // for (ResourceType r : {ResourceType::ORE, ResourceType::BRICK, ResourceType::WOOD, ResourceType::WHEAT, ResourceType::SHEEP}) {
-    //     p1.addResource(r, 100);
-    //     p2.addResource(r, 10);
-    //     p3.addResource(r, 10);
-    // }
-    // p2.status();
-    // p3.status();
+
+
 
     // for (int i = 0; i < 25; i++) {
     //     p1.buyDevelopmentCard();   
     // }
+
     // p1.status();
     // p1.placeSettlement(0);
     // p1.placeSettlement(0);
@@ -59,7 +55,34 @@ int main() {
             p2.placeRoad(0);
     */
 
-    /* test for
+    // some code for starting the game
+    p1.placeSettlement(2);
+    p1.placeRoad(1);
+    catan.advanceTurn();
+    p2.placeSettlement(4);
+    p2.placeRoad(3);
+    catan.advanceTurn();
+    p3.placeSettlement(6);
+    p3.placeRoad(5);
+    catan.advanceTurn();
+    p3.placeSettlement(8);
+    p3.placeRoad(7);
+    catan.advanceTurn();
+    p2.placeSettlement(11);
+    p2.placeRoad(10);
+    catan.advanceTurn();
+    p1.placeSettlement(13);
+    p1.placeRoad(12);
+    p1.status();
+    p2.status();
+    p1.Trade(p2, ResourceType::WOOD, 105, ResourceType::BRICK, 5);
+    cout << "After trade: " << endl;
+    p1.status();
+    p2.status();
+
+
+    /* test for checking the Trade function
+    p1.Trade(p2, ResourceType::WOOD, 5, ResourceType::BRICK, 5);
     */
     
     /* test for
