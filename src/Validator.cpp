@@ -175,6 +175,12 @@ void Validator::validatePlayer() {
 
     } else if (functionName == "upgradeSettlementToCity") {
 
+        // check if this is the start of the game the player cannot trade
+        if (player->afterStartGame == false) {
+            valid = false;
+            throw std::runtime_error("You cannot upgrade a settlement to a city at the beginning of the game.");
+        }
+
         if (player->getNumOfSettlements() < 0) {
             valid = false;
             throw std::runtime_error("You must have at least one settlement to upgrade to a city.");
@@ -201,9 +207,13 @@ void Validator::validatePlayer() {
             throw std::runtime_error("You can only upgrade your own settlements to cities.");
         }
         
-    }
-    
-    else if (functionName == "Trade") {
+    }  
+    else if (functionName == "Trade"){
+        // check if this is the start of the game the player cannot trade
+        if (player->afterStartGame == false) {
+            valid = false;
+            throw std::runtime_error("You cannot trade at the beginning of the game.");
+        }
         // check if the player has the resources to trade
         if (giveAmount > 0 && !player->checkResources({ {giveResource, giveAmount} })) {
             valid = false;
@@ -216,21 +226,33 @@ void Validator::validatePlayer() {
             throw std::runtime_error("The player you want to trade with doesn't have enough resources");
         }
     }
-    //  else if (functionName == "buyDevelopmentCard") {
-    //     // בדיקה אם השחקן יכול לקנות קלף פיתוח
-    //     if (!player->canBuyDevelopmentCard()) {
-    //         valid = false;
-    //         throw std::runtime_error("Player cannot buy a development card.");
-    //     }
-    //     // בדיקות נוספות לפי הצורך...
-    // } else if (functionName == "useDevelopmentCard") {
-    //     // בדיקה אם השחקן יכול להשתמש בקלף הפיתוח
-    //     if (!player->canUseDevelopmentCard(card)) {
-    //         valid = false;
-    //         throw std::runtime_error("Player cannot use this development card.");
-    //     }
-    //     // בדיקות נוספות לפי הצורך...
-    // }
+     else if (functionName == "buyDevelopmentCard") {
+            // check if this is the start of the game the player cannot trade
+            if (player->afterStartGame == false) {
+            valid = false;
+            throw std::runtime_error("You cannot buy a development card at the beginning of the game.");
+            }
+
+            // check if the player has the resources to buy a development card
+            if (!player->checkResources({{ResourceType::WHEAT, 1}, {ResourceType::SHEEP, 1}, {ResourceType::ORE, 1}})) {
+                throw std::runtime_error("You don't have enough resources to buy a development card.");
+            }
+
+            // check if there are development cards available
+            if (board.getDeck().empty()) {
+                throw std::runtime_error("You cannot buy a development card because there are no cards left in the deck.");
+            }
+        }  
+    else if (functionName == "useDevelopmentCard") {
+        /* write all the conditions to use the development cards
+            5. Apply the effect of the card based on its specific rules.
+        */
+        // 1. Check if the card was not purchased this turn.
+        if (player->parchaseDevelopmentCardThisTurn == true) {
+            valid = false;
+            throw std::runtime_error("You cannot use a development card that was purchased this turn.");
+        }
+    }
 
 }
 

@@ -84,7 +84,7 @@ void YearOfPlentyCard::applyBenefit(Player* player, const std::variant<vector<Re
         const std::vector<ResourceType>& YearOfPlentyResources = std::get<std::vector<ResourceType>>(benefit);
         for (ResourceType resource : YearOfPlentyResources) {
             player->addResource(resource, 1); 
-        }
+        }       
 }
 
 std::string KnightCard::getType() const {

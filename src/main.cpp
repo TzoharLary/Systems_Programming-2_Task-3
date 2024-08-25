@@ -21,21 +21,9 @@ int main() {
 
 
 
-    // for (int i = 0; i < 25; i++) {
-    //     p1.buyDevelopmentCard();   
-    // }
+ 
 
-    // p1.status();
-    // p1.placeSettlement(0);
-    // p1.placeSettlement(0);
-    // p1.upgradeSettlementToCity(0);
-    // p1.useDevelopmentCard("Monopoly Ore");
-    // p1.useDevelopmentCard("RoadBuilding 0 1");
-    // p1.useDevelopmentCard("YearOfPlenty Ore Wheat");
-    // p1.useDevelopmentCard("Knight");
-    // p1.placeSettlement(2);
-    // p1.placeRoad(1);
-    // p1.status();
+
 
 
     /* test for place a road not connected to a settlement 
@@ -73,22 +61,44 @@ int main() {
     catan.advanceTurn();
     p1.placeSettlement(13);
     p1.placeRoad(12);
-    p1.status();
-    p2.status();
-    p1.Trade(p2, ResourceType::WOOD, 105, ResourceType::BRICK, 5);
-    cout << "After trade: " << endl;
-    p1.status();
-    p2.status();
+    catan.advanceTurn();
+    p1.placeSettlement(15);
+    // print the current player name
+    // cout << "Current player: " << catan.getCurrentPlayerName() << endl;
+    // cout << "did we after the start of the game?" << p1.getIsAfterStartGame() << endl;
+    /*
+    for (int i = 0; i < 25; i++) {
+        p1.buyDevelopmentCard();   
+    }
+    */
+
+    
+    
+
+
+    /* All the options for the useDevelopmentCard function
+    // p1.useDevelopmentCard("Monopoly Ore");
+    // p1.useDevelopmentCard("RoadBuilding 0 1");
+    // p1.useDevelopmentCard("YearOfPlenty Ore Wheat");
+    // p1.useDevelopmentCard("Knight");
+    */
+
+    // p1.status();
+    // p2.status();
+    // cout << "After trade: " << endl;
+    // p1.status();
+    // p2.status();
 
 
     /* test for checking the Trade function
     p1.Trade(p2, ResourceType::WOOD, 5, ResourceType::BRICK, 5);
     */
     
-    /* test for
+    /* test for buying a development card
     */
     
-    /* test for
+    /* test for using a development card that the player dont have
+
     */
     
     /* test for

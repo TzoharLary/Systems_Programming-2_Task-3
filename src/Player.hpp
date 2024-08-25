@@ -25,6 +25,7 @@
 */
 
 using std::string;
+using std::istringstream;
 using std::map;
 using std::vector;
 using std::runtime_error;
@@ -52,6 +53,7 @@ private:
     *  usingRoadBuildingCard: A bool value to determine if the player is using a road building card or not
     */
     vector<unique_ptr<DevelopmentCard>> developmentCards;   
+    std::map<std::string, int> cardCounts;
     int knightCount;
     int victoryPoints;
     Board& board;
@@ -64,10 +66,11 @@ private:
     enum BuyType { ROAD, SETTLEMENT, CITY, DEVELOPMENT_CARD };
     void Buy(BuyType type);
     bool isMyTurn = false;
-    bool afterStartGame = false;   
+    bool afterStartGame = false;  
+    bool parchaseDevelopmentCardThisTurn = false; 
     void setafterStartGame(bool value);
     void setisMyTurn(bool value);
-
+    void setPurchaseDevelopmentCardThisTurn(bool value);
     /* Resource functions with explanations:
     *  removeResource: Remove resources from the player
     *  checkResources: Helper function to check if the player has enough resources to buy something
@@ -99,13 +102,12 @@ private:
     *  setUsingRoadBuildingCard: bool value to determine if the player is using a road building card or not
     *  getUsingRoadBuildingCard: Get the player's road building card usage status 
     *  to determine if the player is using a road building card or not int the placeRoad function
-    *  getDevelopmentCards: Get the player's development cards
+    *  printDevelopmentCards: Print the development cards the player has
     */
     void addDevelopmentCard(std::unique_ptr<DevelopmentCard> card);
     void setUsingRoadBuildingCard(bool value);
     bool getUsingRoadBuildingCard() const;
-    const std::vector<std::unique_ptr<DevelopmentCard>>& getDevelopmentCards() const;
-
+    void printDevelopmentCards() const;
     /*  Friend classes with explanations why they are friends:
     *   KnightCard: The KnightCard class needs to access to methods: incrementKnightCount, incrementPoints, and getKnightCount.
     *   VictoryPointCard: The VictoryPointCard class needs to access to methods: incrementPoints and incrementVictoryPoints.
@@ -162,6 +164,8 @@ public:
     int getNumOfCity() const;
     int getNumOfRoads() const;
     int getNumOfSettlements() const;
+    bool getIsAfterStartGame();
+
 
     // i leave for now this function in public for test myself in the main
 };

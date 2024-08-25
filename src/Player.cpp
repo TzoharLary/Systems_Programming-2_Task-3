@@ -12,26 +12,25 @@ Player::Player(const string &name, Board& board) :   knightCount(0), victoryPoin
 
 void Player::status() const {
     cout << "This is the status of: " << getName() << endl;
-    cout << "Points: " << getPoints() << endl;
-    cout << "Number of Cities: " << getNumOfCity() << endl;
-    cout << "Number of Settlements: " << settlements.size() << endl;
-    // cout << "Number of Development Cards: " << getDevelopmentCards().size() << endl;
+    // cout << "Points: " << getPoints() << endl;
+    // cout << "Number of Cities: " << getNumOfCity() << endl;
+    // cout << "Number of Settlements: " << settlements.size() << endl;
+    cout << "Number of Development Cards: " << developmentCards.size() << endl;
     // cout << "Number of Knights: " << getKnightCount() << endl;
     // cout << "Number of Victory Points: " << victoryPoints << endl;
     // cout << "Number of Roads: " << getNumOfRoads() << endl;
-    cout << "Resources:" << endl;
-    for (const auto& resource : getResources()) {
-        cout << "  " << resourceTypeToString(resource.first) << ": " << resource.second << endl;
-    }
-    // print if this  is player turn or not, and if not, print the name of the player that is playing
-    if (isMyTurn) {
-        cout << "It is your turn" << endl;
-    } 
-    // cout << "the development cards are: " << endl;
-    // for (const auto& card : getDevelopmentCards()) {
-    //     cout << "  " << card->getType() << endl;
+    // ptint the resources of the player
+    // cout << "Resources:" << endl;
+    // for (const auto& resource : getResources()) {
+    //     cout << "  " << resourceTypeToString(resource.first) << ": " << resource.second << endl;
     // }
-
+    // print if this  is player turn or not, 
+    // add if i want and i have a time that: and if not, print the name of the player that is playing
+    // if (isMyTurn) {
+    //     cout << "It is your turn" << endl;
+    // } 
+    // print the development cards that the player has
+    printDevelopmentCards();
 }
 
 void Player::Buy(BuyType type) {
@@ -39,19 +38,24 @@ void Player::Buy(BuyType type) {
     // to the function because the local object cost is created
     // on the stack and automatically deleted at the end of the function.
     map<ResourceType, int> cost;
+    string purchaseType;
 
     switch (type) {
         case ROAD:
             cost = {{WOOD, 1}, {BRICK, 1}};
+            purchaseType = "Road";
             break;
         case SETTLEMENT:
             cost = {{WOOD, 1}, {BRICK, 1}, {SHEEP, 1}, {WHEAT, 1}};
+            purchaseType = "Settlement";
             break;
         case CITY:
             cost = {{WHEAT, 2}, {ORE, 3}};
+            purchaseType = "City";
             break;
         case DEVELOPMENT_CARD:
             cost = {{ORE, 1}, {WHEAT, 1}, {SHEEP, 1}};
+            purchaseType = "Development Card";
             break;
         default:
             cout << "Unknown purchase type." << endl;
@@ -64,7 +68,8 @@ void Player::Buy(BuyType type) {
             for (const auto& item : cost) {
                 removeResource(item.first, item.second);
             }
-            cout << "Purchase of " << resourceTypeToString(cost.begin()->first) << " successful." << endl;
+            // print the purchase was successful of what the player bought
+            cout << "Purchase of " << purchaseType << " successful." << endl;
         } catch (const runtime_error& e) {
             cout << e.what() << endl;
         }
@@ -74,8 +79,6 @@ void Player::Buy(BuyType type) {
 
     }
 }
-
-
 
 bool Player::checkResources(const map<ResourceType, int>& cost) {
     bool hasAllResources = true;
@@ -118,8 +121,6 @@ ResourceType Player::stringToResourceType(const std::string& str) const {
     }
 }
 
-
-
 void Player::placeSettlement(int vertexIndex) {
 
     /* Validator object explanation:
@@ -128,7 +129,7 @@ void Player::placeSettlement(int vertexIndex) {
         the validator object will check all
         the conditions and return a boolean value if the player can place a settlement 
     */
-   Validator validator("Player", "placeSettlement", this, vertexIndex, board);
+    Validator validator("Player", "placeSettlement", this, vertexIndex, board, ResourceType::WOOD, 0, ResourceType::BRICK, 0, nullptr);
     if (!validator.isValid()) {
         return;
     }   
@@ -161,15 +162,12 @@ void Player::placeSettlement(int vertexIndex) {
     cout << name << " placed a settlement on vertex " << vertexIndex << endl;
 }
 
-
 void Player::placeRoad(int roadIndex) { 
-    Validator validator("Player", "placeRoad", this, roadIndex, board);
+    Validator validator("Player", "placeSettlement", this, roadIndex, board, ResourceType::WOOD, 0, ResourceType::BRICK, 0, nullptr);
     if (!validator.isValid()) {
         return;
     }   
     Road& road = board.roads.at(roadIndex);
-
-
     // adding a if condition to check if the player has a RoadBuilding card in his hand
     // if this is the case, the player can place two roads without the need to buy them.
     if (getUsingRoadBuildingCard()) {
@@ -199,25 +197,21 @@ void Player::placeRoad(int roadIndex) {
     8. Outputs a message indicating the successful upgrade of a settlement to a city.
 */
 void Player::upgradeSettlementToCity(int vertexIndex) {
-    Validator validator("Player", "upgradeSettlementToCity", this, vertexIndex, board);
+    Validator validator("Player", "upgradeSettlementToCity", this, vertexIndex, board, ResourceType::WOOD, 0, ResourceType::BRICK, 0, nullptr);
     if (!validator.isValid()) {
         return;
     }  
     Vertex& vertex = board.vertices.at(vertexIndex);
-    if (this->getPoints() > 1) {
-        Buy(Player::BuyType::CITY);
-    }
-    else{
-        cout << "You in the start of the game, you can't buy a city" << endl;
-        return;
-    }
-   
+    // we already checked if this is the start of the game in the validator
+    // if this is the start of the game the validator will return false and the function will not reach this point
+    Buy(Player::BuyType::CITY);
+    
     decrementNumOfSettlements(vertexIndex);
     // vertex.setType(Vertex::VertexType::CITY);
     vertex.setVertexProperties(Vertex::VertexType::CITY, this);
     this->incrementNumOfCity();
     this->incrementPoints();
-    std::cout << "Player " << name << " upgraded a settlement to a city on vertex " << vertexIndex << std::endl;
+    std::cout << "The player " << name << " upgraded a settlement to a city on vertex " << vertexIndex << std::endl;
 }
 
 void Player::Trade(Player& player, ResourceType give, int giveAmount, ResourceType take, int takeAmount) {
@@ -287,8 +281,6 @@ map<ResourceType, int> Player::getResources() const {
     return resources;
 }
 
-
-
 void Player::incrementKnightCount() {
     knightCount++;
 }
@@ -311,6 +303,22 @@ void Player::setafterStartGame(bool value) {
 
 void Player::setisMyTurn(bool value) {
     isMyTurn = value;
+}
+
+// This function made because the player can't use a development card that was purchased this turn
+void Player::setPurchaseDevelopmentCardThisTurn(bool value) {
+    parchaseDevelopmentCardThisTurn = value;
+}
+
+bool Player::getIsAfterStartGame() {
+    if (afterStartGame == true) {
+        cout << " The game is after first round" << endl;
+
+       }
+    else{
+        cout << " The game is in the first round" << endl;
+    }
+    return afterStartGame;
 }
 
 int Player::getNumOfRoads() const {
@@ -343,23 +351,47 @@ void Player::decrementNumOfSettlements(int vertexIndex) {
     }
 }
 
-// Getter for development cards of the player
-const std::vector<std::unique_ptr<DevelopmentCard>>& Player::getDevelopmentCards() const {
-    return developmentCards;    
+/* Explanation of the function printDevelopmentCards:
+    1. Checks if the player has any development cards.
+    2. If the player has no development cards, outputs "No development cards".
+    3. If the player has development cards, outputs the type of each development card and the number of each card.
+*/
+void Player::printDevelopmentCards() const {
+    // Check if the player has any development cards
+    if (developmentCards.size() == 0) {
+        std::cout << "No development cards" << std::endl;
+    }
+    // If the player has development cards, print the type of each development card and the number of each card
+    else {
+        cout << "the development cards that " << name << " has:" << endl;
+        std::map<std::string, int> cardCounts;
+        for (const auto& card : developmentCards) {
+            cardCounts[card->getType()]++;
+        }
+        for (const auto& card : cardCounts) {
+            std::cout << card.first << ": " << card.second << std::endl;
+        }
+        cout << "Victory Points: " << victoryPoints << endl;
+    }
 }
 
 void Player::buyDevelopmentCard() {
-    // check if the player is not on the begin of the game
-    // Check if the player has enough resources to buy a development card using method Buy
-    Buy(Player::BuyType::DEVELOPMENT_CARD);
-    auto& deck = board.getDeck();
-    if (deck.empty()) {
-        std::cerr << "No more development cards available." << std::endl;
+    Validator validator("Player", "buyDevelopmentCard", this, -1, board, ResourceType::WOOD, 0, ResourceType::BRICK, 0, nullptr);
+    if (!validator.isValid()) {
         return;
     }
+
+
+    Buy(Player::BuyType::DEVELOPMENT_CARD);
+    auto& deck = board.getDeck();
+
     // Add the card to the player's hand in random order
     addDevelopmentCard(std::move(deck.back()));
+    // Remove the card from the deck for no one else to get it anymore
     deck.pop_back();
+    setPurchaseDevelopmentCardThisTurn(true);
+
+
 }
 
 void Player::addDevelopmentCard(std::unique_ptr<DevelopmentCard> card) {
@@ -372,27 +404,36 @@ void Player::addDevelopmentCard(std::unique_ptr<DevelopmentCard> card) {
         return;
     }else{
         developmentCards.push_back(std::move(card));
+
     }
 }
 
 void Player::useDevelopmentCard(const std::string& command) {
-    // add check if the parameters are valid - is string
+    Validator validator("Player", "useDevelopmentCard", this, -1, board, ResourceType::WOOD, 0, ResourceType::BRICK, 0, nullptr);
     
+    // add check if the parameters are valid - is string
+
     // Breaks the string into words (tokens) using a default separator (space).
-    std::istringstream iss(command);
-    std::vector<std::string> tokens{std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{}};
-    // If the player has no development cards, return
-    if (tokens.empty()){
-        cout << "No development cards available." << endl;
-        return;
-    }
+    
+    // Used istringstream to easily parse and manipulate the string content into separate tokens.
+    // Using istringstream helps to separate the words in a string very easily
+    istringstream iss(command);
+    vector<string> tokens{std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{}};
     // The first token is the type of the card
-    std::string cardType = tokens[0];
+    string cardType = tokens[0];
     // Find the card in the player's hand
+    /* Explanation of the find the card in the player's hand:
+    *  We use the find_if function to search for the development card in the player's hand.
+    *  the find_if function takes the developmentCards vector as the first argument and the end of the vector as the second argument.
+    *  The third argument is a lambda function that takes a development card as an argument and returns a boolean value based on the card type.
+    *  The lambda function compares the card type with the cardType variable and returns true if they match.
+    *  The it variable is an iterator that points to the development card in the player's hand.
+    */
     auto it = std::find_if(developmentCards.begin(), developmentCards.end(),
         [&cardType](const std::unique_ptr<DevelopmentCard>& card) {
             return card->getType() == cardType;
         }); 
+
     // If the card is not found, print an error message and return
     if (it == developmentCards.end()) {
         cout << "No such card available." << endl;
@@ -403,14 +444,13 @@ void Player::useDevelopmentCard(const std::string& command) {
         try {
         ResourceType resource = stringToResourceType(tokens[1]);
         (*it)->applyBenefit(this, std::vector<ResourceType>{resource});
-    } catch(const std::exception& e) {
-        std::cerr << "The resource specified in the command does not exist." << std::endl;
-    }
-        // Turn on the monopoly card
-
-
-       
-    } else if (cardType == "YearOfPlenty" && tokens.size() >= 2 && tokens.size() <= 3) {
+        developmentCards.erase(it);
+        } 
+        catch(const std::exception& e) {
+            std::cerr << "The resource specified in the command does not exist." << std::endl;
+        }   
+    } 
+    else if (cardType == "YearOfPlenty" && tokens.size() >= 2 && tokens.size() <= 3) {
     try {
         std::vector<ResourceType> resources;
         for (size_t i = 1; i < tokens.size(); ++i) {
@@ -443,7 +483,6 @@ void Player::useDevelopmentCard(const std::string& command) {
         return;
     }
     setUsingRoadBuildingCard(false);
-
     developmentCards.erase(it);
 }
 
