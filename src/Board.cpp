@@ -295,22 +295,55 @@ void Board::createDevelopmentCards() {
     std::shuffle(developmentCards.begin(), developmentCards.end(), g);
 }
 
-void Board::addTile(int id, ResourceType resource, int number, const vector<Vertex>& verticesOfTile, const vector<int>& adjacentTiles) {
-    
-    for (const auto& vertex : verticesOfTile) {
-        /*  If the vertex is not in the vector of vertices of the tile,
-            an error is thrown because the vertex should exist
-            in the vector before adding it to the new slot.
-            the condition says that for each vertex in the vertices vector
-            if the vertex id is not in the vertices vector throw an error
-        */
-        if (vertex.getId() < 0 || vertex.getId() >= static_cast<int>(vertices.size())) {
-            // If the vertexId does not exist, throw an error
+/* Explanation of the function addTile:
+*  1. The purpose of the function addTile is to add a new tile to the board.
+*  2. This function performs the following actions:
+*     a. Check if the vertices of the tile exist in the vertices vector.
+*     b. Create a new Tile object with the given resource, number, vertices, and adjacentTiles.
+*     c. Add the new tile to the board's tiles vector.
+*/
+// void Board::addTile(int id, ResourceType resource, int number, const vector<Vertex>& verticesOfTile, const vector<int>& adjacentTiles) {
+//     vector<Vertex> selectedVertices;
+
+//     // This Loop checks if the vertices of the tile exist in the vertices vector
+//     for (const Vertex& vertex : verticesOfTile) {
+//         bool found = false;
+//         for (const Vertex& vertexOnBoard : vertices) {
+//             if (vertex.getId() == vertexOnBoard.getId()) {
+//                 selectedVertices.push_back(vertexOnBoard);
+//                 found = true;
+//                 break; // Exit the loop once the vertex is found
+//             }
+//         }
+//         if (!found) {
+//             throw std::runtime_error("Vertex ID does not exist in the vertices vector that the tile is being added to");
+//         }
+//     }
+//     // Create a new Tile object with the given resource, number, vertices, and adjacentTiles
+//     Tile newTile(id, resource, number, selectedVertices, adjacentTiles);
+
+//     // Add the new tile to the board's tiles vector
+//     tiles.push_back(newTile);
+// }
+
+void Board::addTile(int id, ResourceType resource, int number, const vector<int> indexOfVerticesOfTile, const vector<int>& adjacentTiles) {
+    vector<Vertex*> selectedVertices;
+    // This Loop checks if the vertices of the tile exist in the vertices vector
+    for (const int index : indexOfVerticesOfTile) {
+        bool found = false;
+        for (Vertex& vertex : vertices) {
+            if (index == vertex.getId()) {
+                selectedVertices.push_back(&vertex);
+                found = true;
+                break; // Exit the loop once the vertex is found
+            }
+        }
+        if (!found) {
             throw std::runtime_error("Vertex ID does not exist in the vertices vector that the tile is being added to");
         }
     }
     // Create a new Tile object with the given resource, number, vertices, and adjacentTiles
-    Tile newTile(id, resource, number, verticesOfTile, adjacentTiles);
+    Tile newTile(id, resource, number, selectedVertices, adjacentTiles);
 
     // Add the new tile to the board's tiles vector
     tiles.push_back(newTile);
@@ -322,14 +355,11 @@ vector<Tile*> Board::getTilesForVertex(int vertexIndex) {
     // Iterate over all the tiles in the board
     for (Tile& CurrentTile : tiles) {
         // Iterate over all the vertices of the tile and check if the vertexIndex matches
-        // the cast to int is necessary because the size() method returns an unsigned integer
-        for (int i = 0; i < static_cast<int>(CurrentTile.getVerticesSize()); ++i) {
-            // create a pointer to the current vertex in the tile
-            const Vertex* vertex = CurrentTile.getVertex(i);
+        for (const Vertex* vertex : CurrentTile.getVertices()) {
             // Check if the vertex is not null and the index matches the vertexIndex
-            if (vertex->getId() == vertexIndex) {
+            if (vertex != nullptr && vertex->getId() == vertexIndex) {
                 tilesForVertex.push_back(&CurrentTile);
-                break;
+                break;  // Exit the loop once the vertex is found in the current tile
             }
         }
     }
@@ -358,26 +388,67 @@ vector<Road> Board::getRoads() const {
     return roads;
 }
 
-void Board::distributeResources(int rolledNumber) {
-    // auto& tile: Indicates that the variable tile is a reference to the original variable within the vector board.tiles, preventing unnecessary copying of the tile.
-    // const auto& vertex: Indicates that the variable vertex is a const reference to the original Vertex object within the vector tile.vertices, preventing unintended modification and unnecessary copying.
-    for (auto& tile : tiles) {
-        if (tile.getNumber() != rolledNumber) {
-            continue;
-        }
-        for (const auto& vertex : tile.getVertices()) {
-            if (vertex.isOccupied()) {
-                Player* PlayerOnThisTile = vertex.getPlayer();
-                if (vertex.getType() == Vertex::VertexType::SETTLEMENT) {
-                    PlayerOnThisTile->addResource(tile.getResource(), 1);
-                } else if (vertex.getType() == Vertex::VertexType::CITY) {
-                    PlayerOnThisTile->addResource(tile.getResource(), 2);
-                }
-            }
-        }
-    }
+vector<Vertex> Board::getAllVertices() const {
+    return vertices;
 }
 
-/* Functions for test purposes:
+vector<Tile> Board::getAllTiles() const {
+    return tiles;
+}
 
+Vertex Board::getVertex(int index) const {
+    if (index < 0 || index >= static_cast<int>(vertices.size())) {
+        std::cerr << "Error: Invalid vertex index on getVertex function in board class" << std::endl;
+        }
+    return vertices[index];
+}
+
+/* Explanation of the function distributeResources:
+*  The function distributeResources is a member function of the Board class that takes an integer rolledNumber as a parameter.
+*  The purpose of the function is to distribute resources to players based on the rolled number.
+*  The method follows these steps:
+*  1. Iterate over all the tiles on the board.
+*  2. For each tile, check if the rolled number matches the tile number.
+*  3. If the numbers match, iterate over all the vertices of the tile.
+*  4. For each vertex, check if it is occupied by a player.
+*  5. If the vertex is occupied, check the type of the vertex (settlement or city).
+*  6. If the vertex is a settlement, add one resource of the tile type to the player.
+*  7. If the vertex is a city, add two resources of the tile type to the player.
+*/
+// void Board::distributeResources(int rolledNumber) {
+//     // auto& tile: Indicates that the variable tile is a reference to the original variable within the vector board.tiles, preventing unnecessary copying of the tile.
+//     // const auto& vertex: Indicates that the variable vertex is a const reference to the original Vertex object within the vector tile.vertices, preventing unintended modification and unnecessary copying.
+//     for (auto& tile : tiles) {
+//         if (tile.getNumber() != rolledNumber) {
+//             continue;
+//         }
+//         for (const auto& vertex : tile.getVertices()) {
+//             if (vertex.isOccupied()) {
+//                 Player* PlayerOnThisTile = vertex.getPlayer();
+//                 if (vertex.getType() == Vertex::VertexType::SETTLEMENT) {
+//                     PlayerOnThisTile->addResource(tile.getResource(), 1);
+//                 } else if (vertex.getType() == Vertex::VertexType::CITY) {
+//                     PlayerOnThisTile->addResource(tile.getResource(), 2);
+//                 }
+//             }
+//         }
+//     }
+// }
+
+
+// method that print the adjacent vertices of the vertex with the index vertexIndex
+
+
+/* Functions for test purposes:
+void Board::printAdjacent(int index, bool isTile) const {
+    std::vector<int> result;
+    if (isTile) {
+        result = getAdjacentTiles(index);
+    } else {
+        result = getAdjacentVertices(index);
+    }
+    cout << (isTile ? "this is the Adjacent of the Tiles: " : "this is the Adjacent of the Vertices: ") << "[ "; 
+    printVector(result);
+    cout << "\n";
+}
 */

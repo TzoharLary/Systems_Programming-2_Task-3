@@ -7,6 +7,7 @@
 
 class Player;
 
+
 class Catan {
 public:
     Catan(Player &p1, Player &p2, Player &p3 , Board& board);
@@ -28,7 +29,9 @@ private:
     Player *currentPlayer;
     int currentTurn;
     TurnPhase phase;
-    // void ChooseStartingPlayer();
+    int CubeRoll();
+    void distributeResources(int rolledNumber);
+
 
 };
 

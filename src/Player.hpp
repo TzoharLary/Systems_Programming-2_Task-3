@@ -119,7 +119,7 @@ private:
     friend class YearOfPlentyCard;
     friend class Catan;
     friend void Validator::validatePlayer();
-    friend void Board::distributeResources(int rolledNumber);
+    // friend void Board::distributeResources(int rolledNumber);
 
 public:
 

@@ -32,7 +32,7 @@ public:
     string getPlayerName() const;
     int getId() const;    
     bool isOccupied() const;
-  
+    
 
 };
 

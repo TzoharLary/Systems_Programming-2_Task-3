@@ -29,14 +29,14 @@ private:
     int TileId; 
     ResourceType TileResource;
     int TileNumber;
-    vector<Vertex> TileVertices;
+    vector<Vertex*> TileVertices;
     vector<int> adjacentTiles; 
 
 
 
 public:
     // Constructor for the Tile class
-    Tile(int id, ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles);
+    Tile(int id, ResourceType resource, int number, const std::vector<Vertex*>& vertices, const std::vector<int>& adjacentTiles);
     /* Methods Explanation:
     *  getVertex: return a pointer to the Vertex object at the specified index within the vertices vector of the Tile object.
     *  getResource: return the resource type of the tile.
@@ -46,13 +46,14 @@ public:
     *  getNumber: return the number of the tile.
     *  getId: return the id of the tile.
     */
-    const Vertex* getVertex(int index) const;
-    const vector<Vertex>& getVertices() const;
+    const Vertex* getVertex(int id) const;
+    vector<const Vertex*> getVertices() const;
     ResourceType getResource() const;
     int getId() const;
     vector<int> getAdjacentTiles() const;
     int getVerticesSize() const;
     int getNumber() const;
+    void status() const;
 };
 
 #endif // TILE_HPP

@@ -4,9 +4,9 @@
 
 
 Player::Player(const string &name, Board& board) :   knightCount(0), victoryPoints(0), board(board), name(name), points(0), Citys(0) {
-    for (int i = WOOD; i <= ORE; ++i) {
-        resources[static_cast<ResourceType>(i)] = 100;
-    }
+    // for (int i = WOOD; i <= ORE; ++i) {
+    //     resources[static_cast<ResourceType>(i)] = 100;
+    // }
     
 }
 
@@ -15,22 +15,25 @@ void Player::status() const {
     // cout << "Points: " << getPoints() << endl;
     // cout << "Number of Cities: " << getNumOfCity() << endl;
     // cout << "Number of Settlements: " << settlements.size() << endl;
-    cout << "Number of Development Cards: " << developmentCards.size() << endl;
+    // cout << "Number of Development Cards: " << developmentCards.size() << endl;
     // cout << "Number of Knights: " << getKnightCount() << endl;
     // cout << "Number of Victory Points: " << victoryPoints << endl;
     // cout << "Number of Roads: " << getNumOfRoads() << endl;
-    // ptint the resources of the player
-    // cout << "Resources:" << endl;
-    // for (const auto& resource : getResources()) {
-    //     cout << "  " << resourceTypeToString(resource.first) << ": " << resource.second << endl;
-    // }
+
+    // print the resources of the player
+    cout << "Resources:" << endl;
+    for (const auto& resource : getResources()) {
+        cout << "  " << resourceTypeToString(resource.first) << ": " << resource.second << endl;
+    }
+
     // print if this  is player turn or not, 
-    // add if i want and i have a time that: and if not, print the name of the player that is playing
+    // add if i want and have a time that check that: and if not, print the name of the player that is playing
     // if (isMyTurn) {
     //     cout << "It is your turn" << endl;
     // } 
+
     // print the development cards that the player has
-    printDevelopmentCards();
+    // printDevelopmentCards();
 }
 
 void Player::Buy(BuyType type) {
@@ -135,17 +138,12 @@ void Player::placeSettlement(int vertexIndex) {
     }   
     // Get the vertex object from the map of vertices for 
     Vertex& vertex = board.vertices.at(vertexIndex); // Using at() instead of []
-
-    // Condition to check if this is the first 2 settelments of the player
-    // that the player dont need to buy the settlement because he gets it for free
-   
     // If this is not the start of the game
     if (afterStartGame) {
         // Check if the player has enough resources to buy a settlement
         Buy(Player::BuyType::SETTLEMENT);
         
     }
-
     // If this is the start of the game
     else{
         // Get the tiles that are associated with the vertex that we built the settlement on
@@ -155,6 +153,7 @@ void Player::placeSettlement(int vertexIndex) {
             addResource(tile->getResource(), 1);
         }
     }
+   
     vertex.setVertexProperties(Vertex::VertexType::SETTLEMENT, this);
     this->settlements.push_back(vertexIndex); // Add the settlement to the player's list of settlements
     this -> incrementPoints(); // Settlement is worth 1 point
@@ -163,7 +162,7 @@ void Player::placeSettlement(int vertexIndex) {
 }
 
 void Player::placeRoad(int roadIndex) { 
-    Validator validator("Player", "placeSettlement", this, roadIndex, board, ResourceType::WOOD, 0, ResourceType::BRICK, 0, nullptr);
+    Validator validator("Player", "placeRoad", this, roadIndex, board, ResourceType::WOOD, 0, ResourceType::BRICK, 0, nullptr);
     if (!validator.isValid()) {
         return;
     }   
@@ -380,8 +379,6 @@ void Player::buyDevelopmentCard() {
     if (!validator.isValid()) {
         return;
     }
-
-
     Buy(Player::BuyType::DEVELOPMENT_CARD);
     auto& deck = board.getDeck();
 

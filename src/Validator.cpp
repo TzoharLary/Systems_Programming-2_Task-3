@@ -98,19 +98,24 @@ void Validator::validatePlayer() {
         throw std::runtime_error("It is not your turn.");
     }
 
-
+    /* The tests I do so that it is permissible to assume a settlement in the desired index:
+    *  1. Check if the player has more than 5 settlements
+    *  2. Check if the vertexIndex is found in the vector and exists
+    *  3. Check if there is a settlement on an adjacent vertex
+    *  4. Check if there is a settlement on the vertex
+    *  
+    */
     if (functionName == "placeSettlement") {
         // Check if the player has more than 5 settlements
         if (player->getNumOfSettlements() >= 5) {
             valid = false;
             throw std::runtime_error("Player cannot have more than 5 settlements.");
         }
-         // Check if the vertexIndex is found in the vertor and exists
+         // Check if the vertexIndex is found in the vector and exists
         if (index < 0 || index >= static_cast<int>(boardRef.vertices.size())) {
             valid = false;
             throw std::out_of_range("Invalid vertex index when trying to place a settlement");
         }
-
 
         Vertex& vertex = boardRef.vertices.at(index);
         if (vertex.isOccupied()) {
@@ -118,7 +123,7 @@ void Validator::validatePlayer() {
             throw std::runtime_error("There is already a settlement on this vertex. (vertex index: " + std::to_string(index) + ")");
         }
         /*   Check if there is a settlement on an adjacent vertex
-         For loop that iterates over the adjacent vertices of the current vertex
+         Do it using for loop that iterates over the adjacent vertices of the current vertex
          and checks if there is a settlement on any of them
         */ 
         for (int adjacentVertex : vertex.getAdjacentVertices()) {

@@ -14,24 +14,12 @@ int main() {
     Player p2("Yossi", board);
     Player p3("Dana", board);
     Catan catan(p1, p2, p3, board);
-
-
     globalCatan = &catan;
-
-
-
-
- 
-
-
-
 
     /* test for place a road not connected to a settlement 
     // 1. place a road near nothing
     p1.placeRoad(1);
-    */
 
-    /*
     2. place a road near a settlement that not  belong to the player
     p1.placeSettlement(2);
     p2.placeRoad(1);
@@ -44,38 +32,67 @@ int main() {
     */
 
     // some code for starting the game
-    p1.placeSettlement(2);
-    p1.placeRoad(1);
+    p1.placeSettlement(10);
+    p1.placeRoad(8);
     catan.advanceTurn();
-    p2.placeSettlement(4);
-    p2.placeRoad(3);
-    catan.advanceTurn();
-    p3.placeSettlement(6);
-    p3.placeRoad(5);
-    catan.advanceTurn();
-    p3.placeSettlement(8);
-    p3.placeRoad(7);
-    catan.advanceTurn();
-    p2.placeSettlement(11);
+    p2.placeSettlement(12);
     p2.placeRoad(10);
     catan.advanceTurn();
-    p1.placeSettlement(13);
-    p1.placeRoad(12);
+    p3.placeSettlement(19);
+    p3.placeRoad(16);
     catan.advanceTurn();
-    p1.placeSettlement(15);
+    p3.placeSettlement(23);
+    p3.placeRoad(20);
+    catan.advanceTurn();
+    p2.placeSettlement(30);
+    p2.placeRoad(26);
+    catan.advanceTurn();
+    p1.placeSettlement(35);
+    p1.placeRoad(66);
+    p1.status();
+    p2.status();
+    p3.status();
+    catan.advanceTurn();
+    p1.status();
+    p2.status();
+    p3.status();
+    // p1.placeSettlement(15);
     // print the current player name
     // cout << "Current player: " << catan.getCurrentPlayerName() << endl;
     // cout << "did we after the start of the game?" << p1.getIsAfterStartGame() << endl;
-    /*
+ 
+ 
+ 
+    /* buy for the player all the development card
     for (int i = 0; i < 25; i++) {
         p1.buyDevelopmentCard();   
     }
     */
 
+   /* Some code for start game
+     p1.placeSettlement(10);
+    p1.placeRoad(8);
+    catan.advanceTurn();
+    p2.placeSettlement(12);
+    p2.placeRoad(10);
+    catan.advanceTurn();
+    p3.placeSettlement(19);
+    p3.placeRoad(16);
+    catan.advanceTurn();
+    p3.placeSettlement(23);
+    p3.placeRoad(20);
+    catan.advanceTurn();
+    p2.placeSettlement(30);
+    p2.placeRoad(26);
+    catan.advanceTurn();
+    p1.placeSettlement(35);
+    p1.placeRoad(66);
+    p1.status();
+    p2.status();
+    p3.status();
+    catan.advanceTurn();
+   */
     
-    
-
-
     /* All the options for the useDevelopmentCard function
     // p1.useDevelopmentCard("Monopoly Ore");
     // p1.useDevelopmentCard("RoadBuilding 0 1");
@@ -83,11 +100,14 @@ int main() {
     // p1.useDevelopmentCard("Knight");
     */
 
-    // p1.status();
-    // p2.status();
-    // cout << "After trade: " << endl;
-    // p1.status();
-    // p2.status();
+    /* test for checking if the value of the vertex is correct on the field that 
+    *  holding a vector of pointers to the vertices on the tile
+    Tile t1 = board.getTile(1);
+    t1.status();
+    const Vertex* v10 = board.getTile(1).getVertex(10);
+    cout << "The status of vertex 10 is: " << endl;
+    v10->status();  
+    */
 
 
     /* test for checking the Trade function

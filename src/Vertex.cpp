@@ -13,13 +13,46 @@ using VertexType = Vertex::VertexType;
 */
 Vertex::Vertex(int idx) :  id(idx), occupied(false), player(nullptr), type(NONE) {}
 
+void Vertex::status() const {
+    cout << "This is the status of the vertex: " << id << endl;
+    if (occupied) {
+        cout << "The vertex is occupied" << endl;
+    } else {
+        cout << "The vertex is not occupied" << endl;
+    }
+    if(type == SETTLEMENT){
+        cout << "The vertex is a settlement" << endl;
+    }
+    if (type == CITY){
+        cout << "The vertex is a city" << endl;
+    }
+    if (type == NONE){
+        cout << "The vertex is NONE" << endl;
+    }
+    if (player == nullptr){
+        cout << "The vertex is not belong by any player" << endl;
+    }
+    else{
+        cout << "The vertex is occupied by player: " << player->getName() << endl;
+    }
+
+    cout << "Adjacent vertices: ";
+    for (int vertex : adjacentVertices) {
+        cout << vertex << " ";
+    }
+    cout << endl;
+}
 
 void Vertex::setAdjacentVertices(const vector<int>& vertices) {
     adjacentVertices = vertices;
 }
 
 bool Vertex::isOccupied() const {
-    return player != nullptr;
+    if (occupied) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void Vertex::setType(VertexType newType) {
@@ -31,7 +64,7 @@ void Vertex::setPlayer(Player* p) {
         throw std::runtime_error("This vertex is already occupied by another player: " + this->getPlayerName());
     }
     player = p;
-    occupied = (p != nullptr);
+    occupied = true;
 }
 
 void Vertex::setVertexProperties(VertexType newType, Player* p) {
@@ -40,7 +73,6 @@ void Vertex::setVertexProperties(VertexType newType, Player* p) {
     // Set the player occupying the vertex
     if(newType == SETTLEMENT){
         setPlayer(p);
-
     }
 }
 

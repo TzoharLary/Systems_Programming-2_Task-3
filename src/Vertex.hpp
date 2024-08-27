@@ -35,6 +35,7 @@ public:
     Player* getPlayer() const;
     VertexType getType() const;
     int getId() const;
+    void status() const;
 
 };
 

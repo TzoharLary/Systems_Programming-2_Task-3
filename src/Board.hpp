@@ -28,13 +28,15 @@ using std::make_unique;
 using std::shuffle;
 
 class Player;
+class catan;
 
 class Board {
 private:
     vector<Tile> tiles;
     vector<Vertex> vertices;
     vector<Road> roads;
-    void addTile(int id, ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles);
+    // void addTile(int id, ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles);
+    void addTile(int id, ResourceType resource, int number, const std::vector<int> indexOfVerticesOfTile, const std::vector<int>& adjacentTiles);
     void createRoads(); 
     void createVertices();
     void createTiles();
@@ -51,19 +53,24 @@ private:
     vector<std::unique_ptr<DevelopmentCard>> developmentCards;
 
 
-    void distributeResources(int rolledNumber);
+    // void distributeResources(int rolledNumber);
     friend class Player;
     friend class Validator;
+    friend class Catan;
 public:
     Board();
     vector<Tile*> getTilesForVertex(int vertexIndex);
+    vector<Tile> getAllTiles() const;
     vector<Road> getRoads() const;
+    vector<Vertex> getAllVertices() const;
+    // method for get a specific vertex by index
+    Vertex getVertex(int index) const;
     Tile getTile(int index) const;
     vector<int> getAdjacentTiles(int tileIndex) const;
     vector<int> getAdjacentVertices(int vertexIndex) const;
     void printAdjacent(int index, bool isTile) const;
     vector<unique_ptr<DevelopmentCard>>& getDeck();
-
+    vector<int> getAdjacentVertices(int vertexIndex);
 };
 
 #endif // BOARD_HPP
