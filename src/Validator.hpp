@@ -6,7 +6,6 @@
 using std::string;
 
 class Player;
-// class Board;
 class Road;
 class Tile;
 class Vertex;
@@ -38,7 +37,7 @@ public:
     *  isValid: Returns the value of the valid variable.
     *  validatePlayer: Validates the player methods.
     */
-    Validator(const std::string& className, const std::string& functionName, void* obj, int index, Board& board, ResourceType giveResource = ResourceType::WOOD, int giveAmount = 0, ResourceType takeResource = ResourceType::BRICK, int takeAmount = 0, Player* otherPlayer = nullptr);
+    Validator(const string& className, const string& functionName, void* obj, int index, Board& board, ResourceType giveResource = ResourceType::WOOD, int giveAmount = 0, ResourceType takeResource = ResourceType::BRICK, int takeAmount = 0, Player* otherPlayer = nullptr);
     bool isValid() const;
     void validatePlayer();
     /*

@@ -25,11 +25,10 @@ private:
     void setAdjacentVertices(const vector<int>& vertices);
     Vertex(int idx); 
     friend class Player;
-    // friend void Player::placeSettlement(int vertexIndex);
     friend class Board;
 
 public:
-    std::vector<int> getAdjacentVertices() const;
+    vector<int> getAdjacentVertices() const;
     string getPlayerName() const;
     bool isOccupied() const;
     Player* getPlayer() const;

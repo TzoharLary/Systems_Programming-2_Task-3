@@ -56,7 +56,7 @@ private:
     *  usingRoadBuildingCard: A bool value to determine if the player is using a road building card or not
     */
     vector<unique_ptr<DevelopmentCard>> developmentCards;   
-    std::map<std::string, int> cardCounts;
+    map<string, int> cardCounts;
     int knightCount;
     int victoryPoints;
     Board& board;
@@ -85,7 +85,7 @@ private:
     void removeResource(ResourceType resource, int amount); // Remove resources from the player
     bool checkResources(const map<ResourceType, int>& cost);// Helper function to check if the player has enough resources to buy something
     string resourceTypeToString(ResourceType type) const;
-    ResourceType stringToResourceType(const std::string& str) const; 
+    ResourceType stringToResourceType(const string& str) const; 
    
     /* Increment and decrement functions with explanations:
     *  decrementNumOfSettlements: Decrease the number of settlements the player has
@@ -107,7 +107,7 @@ private:
     *  to determine if the player is using a road building card or not int the placeRoad function
     *  printDevelopmentCards: Print the development cards the player has
     */
-    void addDevelopmentCard(std::unique_ptr<DevelopmentCard> card);
+    void addDevelopmentCard(unique_ptr<DevelopmentCard> card);
     void setUsingRoadBuildingCard(bool value);
     bool getUsingRoadBuildingCard() const;
     void printDevelopmentCards() const;
@@ -149,7 +149,7 @@ public:
     *  useDevelopmentCard: Use a development card
     */
     void buyDevelopmentCard();
-    void useDevelopmentCard(const std::string& command); 
+    void useDevelopmentCard(const string& command); 
 
     /* Getter functions with explanations:
     *  getResources: Get the player's resources map

@@ -3,14 +3,18 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+using std::cout;
+using std::endl;
+using std::srand;
+using std::time;
 
-std::vector<Player*> Catan::allPlayers;
+vector<Player*> Catan::allPlayers;
 
 Catan::Catan(Player &p1, Player &p2, Player &p3, Board& board) : player1(p1), player2(p2), player3(p3), board(board), currentTurn(0), phase(FirstRound) {
     // ChooseStartingPlayer();
     currentPlayer = &player1;
     player1.setisMyTurn(true);
-    std::srand(std::time(0));
+    srand(time(0));
     allPlayers.push_back(&player1);
     allPlayers.push_back(&player2);
     allPlayers.push_back(&player3);
@@ -24,7 +28,7 @@ string Catan::getCurrentPlayerName() const {
     return currentPlayer->getName();
 }
 
-std::vector<Player*> Catan::getPlayers() {
+vector<Player*> Catan::getPlayers() {
     return allPlayers;
     // return { &player1, &player2, &player3 };
 }
@@ -38,7 +42,7 @@ Player* Catan::getCurrentPlayer() const {
 
 int Catan::CubeRoll() {
     int roll = (rand() % 12) + 2;
-    std::cout << "The cube rolled: " << roll << std::endl;
+    cout << "The cube rolled: " << roll << endl;
     return roll;
 }
 

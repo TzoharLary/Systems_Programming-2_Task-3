@@ -36,7 +36,7 @@ private:
 
 public:
     // Constructor for the Tile class
-    Tile(int id, ResourceType resource, int number, const std::vector<Vertex*>& vertices, const std::vector<int>& adjacentTiles);
+    Tile(int id, ResourceType resource, int number, const vector<Vertex*>& vertices, const vector<int>& adjacentTiles);
     /* Methods Explanation:
     *  getVertex: return a pointer to the Vertex object at the specified index within the vertices vector of the Tile object.
     *  getResource: return the resource type of the tile.

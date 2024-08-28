@@ -2,6 +2,9 @@
 #include <cstdlib> // for rand()
 #include "catan.hpp"
 #include "Player.hpp"
+using std::holds_alternative;
+using std::invalid_argument;
+using std::get;
 #define UNUSED(x) (void)(x)
 
 
@@ -10,7 +13,7 @@
 
 
 
-std::string MonopolyCard::getType() const {
+string MonopolyCard::getType() const {
     return "Monopoly";
 }
 
@@ -29,14 +32,14 @@ std::string MonopolyCard::getType() const {
  * The method iterates over all other players, retrieves the amount of the specified resource they have,
  * and transfers that amount to the player who played the Monopoly card using the Trade method.
  */
-void MonopolyCard::applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) {
-    if (!std::holds_alternative<std::vector<ResourceType>>(benefit)) {
-        throw std::invalid_argument("Invalid argument for MonopolyCard");
+void MonopolyCard::applyBenefit(Player* player, const variant<vector<ResourceType>, pair<int, int>>& benefit) {
+    if (!holds_alternative<vector<ResourceType>>(benefit)) {
+        throw invalid_argument("Invalid argument for MonopolyCard");
     }
-    ResourceType MonopolResources = std::get<std::vector<ResourceType>>(benefit)[0];
-    std::vector<Player*> allPlayers = Catan::getPlayers();
+    ResourceType MonopolResources = get<vector<ResourceType>>(benefit)[0];
+    vector<Player*> allPlayers = Catan::getPlayers();
 
-    std::vector<Player*> TargetPlayers;
+    vector<Player*> TargetPlayers;
     for (Player* currentplayer : allPlayers) {
         if (currentplayer->getName() != player->getName()) {
             TargetPlayers.push_back(currentplayer);
@@ -56,25 +59,25 @@ void MonopolyCard::applyBenefit(Player* player, const std::variant<vector<Resour
     }
 }
 
-std::string RoadBuildingCard::getType() const {
+string RoadBuildingCard::getType() const {
     return "RoadBuilding";
 }
 
-void RoadBuildingCard::applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) {
+void RoadBuildingCard::applyBenefit(Player* player, const variant<vector<ResourceType>, pair<int, int>>& benefit) {
     // Logic for Road Building benefit
-    if (std::holds_alternative<std::pair<int, int>>(benefit)) {
-            auto roads = std::get<std::pair<int, int>>(benefit);
+    if (holds_alternative<pair<int, int>>(benefit)) {
+            auto roads = get<pair<int, int>>(benefit);
             int roadIndex1 = roads.first;
             int roadIndex2 = roads.second;
             player->placeRoad(roadIndex1);
             player->placeRoad(roadIndex2);
     }
     else {
-                throw std::invalid_argument("Invalid argument for RoadBuildingCard");
+                throw invalid_argument("Invalid argument for RoadBuildingCard");
     }
 }
 
-std::string YearOfPlentyCard::getType() const {
+string YearOfPlentyCard::getType() const {
     return "YearOfPlenty";
 }
 
@@ -90,21 +93,21 @@ std::string YearOfPlentyCard::getType() const {
  * The method iterates over the resources in the vector and adds one unit of each resource 
  * to the player's inventory using the addResource method.
  */
-void YearOfPlentyCard::applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) {
-    if (!std::holds_alternative<std::vector<ResourceType>>(benefit)) {
-            throw std::invalid_argument("Invalid argument for YearOfPlentyCard");
+void YearOfPlentyCard::applyBenefit(Player* player, const variant<vector<ResourceType>, pair<int, int>>& benefit) {
+    if (!holds_alternative<vector<ResourceType>>(benefit)) {
+            throw invalid_argument("Invalid argument for YearOfPlentyCard");
         }
-        const std::vector<ResourceType>& YearOfPlentyResources = std::get<std::vector<ResourceType>>(benefit);
+        const vector<ResourceType>& YearOfPlentyResources = get<vector<ResourceType>>(benefit);
         for (ResourceType resource : YearOfPlentyResources) {
             player->addResource(resource, 1); 
         }       
 }
 
-std::string KnightCard::getType() const {
+string KnightCard::getType() const {
     return "Knight";
 }
 
-void KnightCard::applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) {
+void KnightCard::applyBenefit(Player* player, const variant<vector<ResourceType>, pair<int, int>>& benefit) {
     // Indicate that the 'benefit' parameter is intentionally unused in this implementation.
     UNUSED(benefit); 
     // Logic for Knight benefit
@@ -114,11 +117,11 @@ void KnightCard::applyBenefit(Player* player, const std::variant<vector<Resource
     }
 }
 
-std::string VictoryPointCard::getType() const {
+string VictoryPointCard::getType() const {
     return "VictoryPoint";
 }
 
-void VictoryPointCard::applyBenefit(Player* player, const std::variant<vector<ResourceType>, std::pair<int, int>>& benefit) {   
+void VictoryPointCard::applyBenefit(Player* player, const variant<vector<ResourceType>, pair<int, int>>& benefit) {   
     // Indicate that the 'benefit' parameter is intentionally unused in this implementation.
     UNUSED(benefit); 
     player->incrementPoints();

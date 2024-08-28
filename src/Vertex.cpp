@@ -1,5 +1,6 @@
 #include "Vertex.hpp"
 #include "Player.hpp"
+using std::runtime_error;
 
 using VertexType = Vertex::VertexType;
 
@@ -61,7 +62,7 @@ void Vertex::setType(VertexType newType) {
 
 void Vertex::setPlayer(Player* p) {
     if (this->occupied && this->player) {
-        throw std::runtime_error("This vertex is already occupied by another player: " + this->getPlayerName());
+        throw runtime_error("This vertex is already occupied by another player: " + this->getPlayerName());
     }
     player = p;
     occupied = true;
@@ -80,7 +81,7 @@ Player* Vertex::getPlayer() const {
     return player;
 }
 
-std::vector<int> Vertex::getAdjacentVertices() const {
+vector<int> Vertex::getAdjacentVertices() const {
     return adjacentVertices;
 }
 

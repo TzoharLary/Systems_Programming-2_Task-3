@@ -13,12 +13,16 @@ using std::cout;
 using std::endl;
 using std::out_of_range;
 using std::runtime_error;
+using std::exception;
+using std::cerr;
+using std::to_string;
 
 
 
 
-Validator::Validator(const std::string& className,
-    const std::string& functionName,
+
+Validator::Validator(const string& className,
+    const string& functionName,
     void* obj,
     int index, 
     Board& board,
@@ -77,9 +81,9 @@ void Validator::validate() {
     
         // Add more classes as needed
     }
-    catch(const std::exception& e)
+    catch(const exception& e)
     {
-        std::cerr << e.what() << std::endl;
+        cerr << e.what() << endl;
         valid = false;   
     }
 }
@@ -96,7 +100,7 @@ void Validator::validatePlayer() {
     if(player->isMyTurn == false && functionName != "Trade") {
         valid = false;
         cout << "The player: " << player->getName() << " Try to do an action but it is not his turn" << endl;
-        throw std::runtime_error("It is not your turn.");
+        throw runtime_error("It is not your turn.");
     }
 
     /* The tests I do so that it is permissible to assume a settlement in the desired index:
@@ -110,18 +114,18 @@ void Validator::validatePlayer() {
         // Check if the player has more than 5 settlements
         if (player->getNumOfSettlements() >= 5) {
             valid = false;
-            throw std::runtime_error("Player cannot have more than 5 settlements.");
+            throw runtime_error("Player cannot have more than 5 settlements.");
         }
          // Check if the vertexIndex is found in the vector and exists
         if (index < 0 || index >= static_cast<int>(boardRef.vertices.size())) {
             valid = false;
-            throw std::out_of_range("Invalid vertex index when trying to place a settlement");
+            throw out_of_range("Invalid vertex index when trying to place a settlement");
         }
 
         Vertex& vertex = boardRef.vertices.at(index);
         if (vertex.isOccupied()) {
             valid = false;
-            throw std::runtime_error("There is already a settlement on this vertex. (vertex index: " + std::to_string(index) + ")");
+            throw runtime_error("There is already a settlement on this vertex. (vertex index: " + to_string(index) + ")");
         }
         /*   Check if there is a settlement on an adjacent vertex
          Do it using for loop that iterates over the adjacent vertices of the current vertex
@@ -130,7 +134,7 @@ void Validator::validatePlayer() {
         for (int adjacentVertex : vertex.getAdjacentVertices()) {
             if (boardRef.vertices.at(adjacentVertex).isOccupied()) { 
                 valid = false;
-                throw std::runtime_error("There is a settlement on an adjacent vertex");
+                throw runtime_error("There is a settlement on an adjacent vertex");
             }
         }
    
@@ -138,7 +142,7 @@ void Validator::validatePlayer() {
         // Check if the index is valid and in the range of the roads vector
         if (index < 0 || index >= 72) {
             valid = false;
-            throw std::out_of_range("Invalid road index");
+            throw out_of_range("Invalid road index");
         }
 
         
@@ -146,12 +150,12 @@ void Validator::validatePlayer() {
         // Check if the road is already occupied
         if (road.isOccupied()) {
             valid = false;
-            throw std::runtime_error("The road is already occupied by " + road.getPlayerName());
+            throw runtime_error("The road is already occupied by " + road.getPlayerName());
         }
         // Check if the player has any settlements
         if (player->getNumOfSettlements() < 0) {
             valid = false;
-            throw std::runtime_error("You must have at least one settlement to build a road.");
+            throw runtime_error("You must have at least one settlement to build a road.");
         }
         // if condition to check if the road is near a settlement that belongs to the player
         bool hasPlayerSettlement = false;
@@ -175,7 +179,7 @@ void Validator::validatePlayer() {
         if (!hasPlayerSettlement && !hasToadNearRoad) {
             cout << "the road: " << road.getId() << " has no settlement or road near it" << endl;
             valid = false;
-            throw std::runtime_error("You must build a road near one of your settlements or near one of your roads.");
+            throw runtime_error("You must build a road near one of your settlements or near one of your roads.");
         }
         
 
@@ -184,35 +188,35 @@ void Validator::validatePlayer() {
         // check if this is the start of the game the player cannot trade
         if (player->afterStartGame == false) {
             valid = false;
-            throw std::runtime_error("You cannot upgrade a settlement to a city at the beginning of the game.");
+            throw runtime_error("You cannot upgrade a settlement to a city at the beginning of the game.");
         }
 
         if (player->getNumOfSettlements() < 0) {
             valid = false;
-            throw std::runtime_error("You must have at least one settlement to upgrade to a city.");
+            throw runtime_error("You must have at least one settlement to upgrade to a city.");
         }
 
         if (index < 0 || index >= static_cast<int>(boardRef.vertices.size()))  {
             valid = false;
-            throw std::out_of_range("Invalid vertex index when trying to place a settlement");
+            throw out_of_range("Invalid vertex index when trying to place a settlement");
         }
        
         if (player->getNumOfCity() >= 4) {
             valid = false;
-            throw std::runtime_error("You cannot have more than 4 cities.");
+            throw runtime_error("You cannot have more than 4 cities.");
         }
 
         Vertex& vertex = boardRef.vertices.at(index);
 
         if ( vertex.getType() != Vertex::VertexType::SETTLEMENT){
             valid = false;
-            throw std::runtime_error("You can only upgrade settlements to cities.");
+            throw runtime_error("You can only upgrade settlements to cities.");
         
         }
       
         if ( vertex.getPlayerName() != player->getName()) {
             valid = false;
-            throw std::runtime_error("You can only upgrade your own settlements to cities.");
+            throw runtime_error("You can only upgrade your own settlements to cities.");
         }
         
     }  
@@ -220,42 +224,42 @@ void Validator::validatePlayer() {
         // check if this is the start of the game the player cannot trade
         if (player->afterStartGame == false) {
             valid = false;
-            throw std::runtime_error("You cannot trade at the beginning of the game.");
+            throw runtime_error("You cannot trade at the beginning of the game.");
         }
         // check if the player has the resources to trade
         if (giveAmount > 0 && !player->checkResources({ {giveResource, giveAmount} })) {
             valid = false;
-            throw std::runtime_error("You dont have enough resources to trade");
+            throw runtime_error("You dont have enough resources to trade");
         }
 
         //  check if the other player has the resources to trade
         if (otherPlayer != nullptr && takeAmount > 0 && !otherPlayer->checkResources({ {takeResource, takeAmount} })) {
             valid = false;
-            throw std::runtime_error("The player you want to trade with doesn't have enough resources");
+            throw runtime_error("The player you want to trade with doesn't have enough resources");
         }
     }
     else if (functionName == "buyDevelopmentCard") {
             // check if this is the start of the game the player cannot trade
             if (player->afterStartGame == false) {
             valid = false;
-            throw std::runtime_error("You cannot buy a development card at the beginning of the game.");
+            throw runtime_error("You cannot buy a development card at the beginning of the game.");
             }
 
             // check if the player has the resources to buy a development card
             if (!player->checkResources({{ResourceType::WHEAT, 1}, {ResourceType::SHEEP, 1}, {ResourceType::ORE, 1}})) {
-                throw std::runtime_error("You don't have enough resources to buy a development card.");
+                throw runtime_error("You don't have enough resources to buy a development card.");
             }
 
             // check if there are development cards available
             if (board.getDeck().empty()) {
-                throw std::runtime_error("You cannot buy a development card because there are no cards left in the deck.");
+                throw runtime_error("You cannot buy a development card because there are no cards left in the deck.");
             }
         }  
     else if (functionName == "useDevelopmentCard") {
         // Check if the card was not purchased this turn.
         if (player->parchaseDevelopmentCardThisTurn == true) {
             valid = false;
-            throw std::runtime_error("You cannot use a development card that was purchased this turn.");
+            throw runtime_error("You cannot use a development card that was purchased this turn.");
         }
     }
 }

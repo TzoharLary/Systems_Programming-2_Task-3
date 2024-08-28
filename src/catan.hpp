@@ -1,9 +1,9 @@
 #ifndef CATAN_HPP
 #define CATAN_HPP
 
-#include <vector>
-// #include "Player.hpp"
 #include "Board.hpp"
+#include <vector>
+using std::vector;
 
 class Player;
 
@@ -13,7 +13,7 @@ public:
     Catan(Player &p1, Player &p2, Player &p3 , Board& board);
     Board& getBoard();
     static void checkWinner();
-    static std::vector<Player*> getPlayers();
+    static vector<Player*> getPlayers();
     bool isFirstRound();
     void advanceTurn();
     Player* getCurrentPlayer() const;     

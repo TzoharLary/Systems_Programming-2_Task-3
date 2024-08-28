@@ -26,6 +26,7 @@ using std::copy;
 using std::unique_ptr;
 using std::make_unique;
 using std::shuffle;
+using std::unique_ptr;
 
 class Player;
 
@@ -35,8 +36,7 @@ private:
     vector<Tile> tiles;
     vector<Vertex> vertices;
     vector<Road> roads;
-    // void addTile(int id, ResourceType resource, int number, const std::vector<Vertex>& vertices, const std::vector<int>& adjacentTiles);
-    void addTile(int id, ResourceType resource, int number, const std::vector<int> indexOfVerticesOfTile, const std::vector<int>& adjacentTiles);
+    void addTile(int id, ResourceType resource, int number, const vector<int> indexOfVerticesOfTile, const vector<int>& adjacentTiles);
     void createRoads(); 
     void createVertices();
     void createTiles();
@@ -50,7 +50,8 @@ private:
     // we create a field of development cards that we create on the board that the plaeyrs can buy
     // the unique_ptr is a smart pointer that will delete the object when it goes out of scope
     // and now we can use polymorphism with the development cards.
-    vector<std::unique_ptr<DevelopmentCard>> developmentCards;
+    vector<unique_ptr<DevelopmentCard>> developmentCards;
+    vector<unique_ptr<DevelopmentCard>>& getDeck();
 
 
     // void distributeResources(int rolledNumber);
@@ -69,7 +70,6 @@ public:
     vector<int> getAdjacentTiles(int tileIndex) const;
     vector<int> getAdjacentVertices(int vertexIndex) const;
     void printAdjacent(int index, bool isTile) const;
-    vector<unique_ptr<DevelopmentCard>>& getDeck();
     vector<int> getAdjacentVertices(int vertexIndex);
 };
 

@@ -2,10 +2,11 @@
 #include "Road.hpp"
 #include "Player.hpp"
 #include <iostream>
+using std::runtime_error;
 
 Road::Road(int id) : id(id), OwnerPlayer(nullptr) {}
 
-std::string Road::getPlayerName() const {
+string Road::getPlayerName() const {
     // the condition is know that if the player is nullptr so he go to else
     if (OwnerPlayer) {
         return OwnerPlayer->getName();
@@ -14,7 +15,7 @@ std::string Road::getPlayerName() const {
     }
 }
 
-std::vector<int> Road::getBetweenVertices() const {
+vector<int> Road::getBetweenVertices() const {
     return betweenVertices;
 }
 
@@ -36,7 +37,7 @@ bool Road::isOccupied() const {
 
 void Road::setPlayer(Player* p) {
     if (this->Occupied && this->OwnerPlayer) {
-        throw std::runtime_error("This road is already occupied by another player: " + this->getPlayerName());
+        throw runtime_error("This road is already occupied by another player: " + this->getPlayerName());
     }
     OwnerPlayer = p;
     Occupied = (p != nullptr);

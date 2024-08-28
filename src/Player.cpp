@@ -2,6 +2,18 @@
 #include "Tile.hpp"
 #include "catan.hpp"
 #include <vector>
+using std::move;
+using std::istream_iterator;
+using std::find_if;
+using std::exception;
+using std::cerr;
+using std::stoi;
+using std::make_pair;
+
+
+
+
+
 
 
 Player::Player(const string &name, Board& board) :   knightCount(0), victoryPoints(0), board(board), name(name), points(0), Citys(0) {
@@ -109,7 +121,7 @@ string Player::resourceTypeToString(ResourceType type) const {
     }
 }
 
-ResourceType Player::stringToResourceType(const std::string& str) const {
+ResourceType Player::stringToResourceType(const string& str) const {
     if (str == "Wood") {
         return WOOD;
     } else if (str == "Brick") {
@@ -121,7 +133,7 @@ ResourceType Player::stringToResourceType(const std::string& str) const {
     } else if (str == "Ore") {
         return ORE;
     } else {
-        throw std::runtime_error("Invalid resource type.");
+        throw runtime_error("Invalid resource type.");
     }
 }
 
@@ -212,7 +224,7 @@ void Player::upgradeSettlementToCity(int vertexIndex) {
     vertex.setVertexProperties(Vertex::VertexType::CITY, this);
     this->incrementNumOfCity();
     this->incrementPoints();
-    std::cout << "The player " << name << " upgraded a settlement to a city on vertex " << vertexIndex << std::endl;
+    cout << "The player " << name << " upgraded a settlement to a city on vertex " << vertexIndex << endl;
 }
 
 
@@ -253,7 +265,7 @@ void Player::removeResource(ResourceType resource, int amount) {
     if (resources[resource] >= amount) {
         resources[resource] -= amount;
     } else {
-        throw std::runtime_error("Not enough resources");
+        throw runtime_error("Not enough resources");
     }
 }
 
@@ -350,7 +362,7 @@ void Player::incrementVictoryPoints() {
     3. If the vertexIndex is not found, the function does nothing.
 */
 void Player::decrementNumOfSettlements(int vertexIndex) {
-    auto it = std::find(settlements.begin(), settlements.end(), vertexIndex);
+    auto it = find(settlements.begin(), settlements.end(), vertexIndex);
     if (it != settlements.end()) {
         settlements.erase(it);
     }
@@ -364,17 +376,17 @@ void Player::decrementNumOfSettlements(int vertexIndex) {
 void Player::printDevelopmentCards() const {
     // Check if the player has any development cards
     if (developmentCards.size() == 0) {
-        std::cout << "No development cards" << std::endl;
+        cout << "No development cards" << endl;
     }
     // If the player has development cards, print the type of each development card and the number of each card
     else {
         cout << "the development cards that " << name << " has:" << endl;
-        std::map<std::string, int> cardCounts;
+        map<string, int> cardCounts;
         for (const auto& card : developmentCards) {
             cardCounts[card->getType()]++;
         }
         for (const auto& card : cardCounts) {
-            std::cout << card.first << ": " << card.second << std::endl;
+            cout << card.first << ": " << card.second << endl;
         }
         cout << "Victory Points: " << victoryPoints << endl;
     }
@@ -388,18 +400,18 @@ void Player::buyDevelopmentCard() {
     Buy(Player::BuyType::DEVELOPMENT_CARD);
     auto& deck = board.getDeck();
     // Add the card to the player's hand in random order
-    addDevelopmentCard(std::move(deck.back()));
+    addDevelopmentCard(move(deck.back()));
     // Remove the card from the deck for no one else to get it anymore
     deck.pop_back();
     setPurchaseDevelopmentCardThisTurn(true);
 }
 
-void Player::addDevelopmentCard(std::unique_ptr<DevelopmentCard> card) {
+void Player::addDevelopmentCard(unique_ptr<DevelopmentCard> card) {
     // if condition to check if the card is victory point
     // if this is the case, use the methos useDevelopmentCard and insert 
     // the command "VictoryPoint" to implement the victory point through the method.
     if (card->getType() == "VictoryPoint" ){
-        developmentCards.push_back(std::move(card));
+        developmentCards.push_back(move(card));
         auto& lastCard = developmentCards.back();
         cout << "The Development Card you bought is: " << lastCard->getType() << endl;
         useDevelopmentCard("VictoryPoint");
@@ -408,19 +420,19 @@ void Player::addDevelopmentCard(std::unique_ptr<DevelopmentCard> card) {
     if (card->getType() == "YearOfPlenty" ){
         setPurchaseDevelopmentCardThisTurn(false);
     }
-    developmentCards.push_back(std::move(card));
+    developmentCards.push_back(move(card));
     auto& lastCard = developmentCards.back();
     cout << "The Development Card you bought is: " << lastCard->getType() << endl;
 }
 
-void Player::useDevelopmentCard(const std::string& command) {
+void Player::useDevelopmentCard(const string& command) {
     
 
     // Breaks the string into words (tokens) using a default separator (space).
     // Used istringstream to easily parse and manipulate the string content into separate tokens.
     // Using istringstream helps to separate the words in a string very easily
     istringstream iss(command);
-    vector<string> tokens{std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{}};
+    vector<string> tokens{istream_iterator<string>{iss}, istream_iterator<string>{}};
     // The first token is the type of the card
     string cardType = tokens[0];
     // Find the card in the player's hand
@@ -431,8 +443,8 @@ void Player::useDevelopmentCard(const std::string& command) {
     *  The lambda function compares the card type with the cardType variable and returns true if they match.
     *  The it variable is an iterator that points to the development card in the player's hand.
     */
-    auto it = std::find_if(developmentCards.begin(), developmentCards.end(),
-        [&cardType](const std::unique_ptr<DevelopmentCard>& card) {
+    auto it = find_if(developmentCards.begin(), developmentCards.end(),
+        [&cardType](const unique_ptr<DevelopmentCard>& card) {
             return card->getType() == cardType;
         }); 
 
@@ -454,42 +466,42 @@ void Player::useDevelopmentCard(const std::string& command) {
     if (cardType == "Monopoly" && tokens.size() == 2) {
         try {
         ResourceType resource = stringToResourceType(tokens[1]);
-        (*it)->applyBenefit(this, std::vector<ResourceType>{resource});
+        (*it)->applyBenefit(this, vector<ResourceType>{resource});
         // check why i do twice erase to the card
         // developmentCards.erase(it);
         } 
-        catch(const std::exception& e) {
-            std::cerr << "The resource specified in the command does not exist." << std::endl;
+        catch(const exception& e) {
+            cerr << "The resource specified in the command does not exist." << endl;
         }   
     } 
     else if (cardType == "YearOfPlenty" && tokens.size() >= 2 && tokens.size() <= 3) {
     try {
-        std::vector<ResourceType> resources;
+        vector<ResourceType> resources;
         for (size_t i = 1; i < tokens.size(); ++i) {
             resources.push_back(stringToResourceType(tokens[i]));
         }
         (*it)->applyBenefit(this, resources);
-    } catch(const std::exception& e) {
-        std::cerr << "The resource specified in the command does not exist." << std::endl;
+    } catch(const exception& e) {
+        cerr << "The resource specified in the command does not exist." << endl;
     }
 }
     else if (cardType == "RoadBuilding" && tokens.size() == 3) {
         try {
             setUsingRoadBuildingCard(true);
-            int roadIndex1 = std::stoi(tokens[1]);
-            int roadIndex2 = std::stoi(tokens[2]);
+            int roadIndex1 = stoi(tokens[1]);
+            int roadIndex2 = stoi(tokens[2]);
             cout << "Road 1: " << roadIndex1 << " Road 2: " << roadIndex2 << endl;
-            (*it)->applyBenefit(this, std::make_pair(roadIndex1, roadIndex2));
-        } catch(const std::exception& e) {
-            std::cout << "Invalid road indices specified in the command." << std::endl;
+            (*it)->applyBenefit(this, make_pair(roadIndex1, roadIndex2));
+        } catch(const exception& e) {
+            cout << "Invalid road indices specified in the command." << endl;
         }
     } else if (cardType == "Knight") {
-        (*it)->applyBenefit(this, std::make_pair(0, 0));
+        (*it)->applyBenefit(this, make_pair(0, 0));
     } else if (cardType == "VictoryPoint") {
         // cout << "if the answer is 0, the player has not buy the card this turn. \nif the answer is 1 he did: " << parchaseDevelopmentCardThisTurn << endl;
-        (*it)->applyBenefit(this, std::make_pair(0, 0));
+        (*it)->applyBenefit(this, make_pair(0, 0));
     } else {
-        std::cerr << "Invalid command format." << std::endl;
+        cerr << "Invalid command format." << endl;
         return;
     }
     setUsingRoadBuildingCard(false);
