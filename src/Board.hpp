@@ -28,7 +28,7 @@ using std::make_unique;
 using std::shuffle;
 
 class Player;
-class catan;
+
 
 class Board {
 private:

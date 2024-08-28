@@ -9,11 +9,11 @@
 *  We include the Tile.hpp because we want to use the ResourceType enum in the DevelopmentCard class.
 */
 
-class Catan;
-extern Catan* globalCatan;
 class Player;
 
 class DevelopmentCard {
+protected:
+
 private:
     /*  This is a pure virtual function, meaning that it must be implemented by any derived class
         we do a virtual function because we want to be able to call this function on a different type of development card
@@ -22,9 +22,11 @@ private:
     */ 
     virtual void applyBenefit(Player* player, const std::variant<std::vector<ResourceType>, std::pair<int, int>>& benefit) = 0;
     friend class Player;
+
 public:
     virtual ~DevelopmentCard() {}
     virtual std::string getType() const = 0;
+
 };
 
 

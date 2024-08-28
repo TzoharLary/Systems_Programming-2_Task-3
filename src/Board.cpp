@@ -302,30 +302,6 @@ void Board::createDevelopmentCards() {
 *     b. Create a new Tile object with the given resource, number, vertices, and adjacentTiles.
 *     c. Add the new tile to the board's tiles vector.
 */
-// void Board::addTile(int id, ResourceType resource, int number, const vector<Vertex>& verticesOfTile, const vector<int>& adjacentTiles) {
-//     vector<Vertex> selectedVertices;
-
-//     // This Loop checks if the vertices of the tile exist in the vertices vector
-//     for (const Vertex& vertex : verticesOfTile) {
-//         bool found = false;
-//         for (const Vertex& vertexOnBoard : vertices) {
-//             if (vertex.getId() == vertexOnBoard.getId()) {
-//                 selectedVertices.push_back(vertexOnBoard);
-//                 found = true;
-//                 break; // Exit the loop once the vertex is found
-//             }
-//         }
-//         if (!found) {
-//             throw std::runtime_error("Vertex ID does not exist in the vertices vector that the tile is being added to");
-//         }
-//     }
-//     // Create a new Tile object with the given resource, number, vertices, and adjacentTiles
-//     Tile newTile(id, resource, number, selectedVertices, adjacentTiles);
-
-//     // Add the new tile to the board's tiles vector
-//     tiles.push_back(newTile);
-// }
-
 void Board::addTile(int id, ResourceType resource, int number, const vector<int> indexOfVerticesOfTile, const vector<int>& adjacentTiles) {
     vector<Vertex*> selectedVertices;
     // This Loop checks if the vertices of the tile exist in the vertices vector

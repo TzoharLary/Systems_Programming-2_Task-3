@@ -92,9 +92,10 @@ void Validator::validatePlayer() {
     Player* player = static_cast<Player*>(obj);
     Board& boardRef = board;
     valid = true;
-    // validate player turn
-    if(player->isMyTurn == false){
+    // validate player turn, and alowed to trade in any turn
+    if(player->isMyTurn == false && functionName != "Trade") {
         valid = false;
+        cout << "The player: " << player->getName() << " Try to do an action but it is not his turn" << endl;
         throw std::runtime_error("It is not your turn.");
     }
 
@@ -195,6 +196,7 @@ void Validator::validatePlayer() {
             valid = false;
             throw std::out_of_range("Invalid vertex index when trying to place a settlement");
         }
+       
         if (player->getNumOfCity() >= 4) {
             valid = false;
             throw std::runtime_error("You cannot have more than 4 cities.");
@@ -207,6 +209,7 @@ void Validator::validatePlayer() {
             throw std::runtime_error("You can only upgrade settlements to cities.");
         
         }
+      
         if ( vertex.getPlayerName() != player->getName()) {
             valid = false;
             throw std::runtime_error("You can only upgrade your own settlements to cities.");
@@ -231,7 +234,7 @@ void Validator::validatePlayer() {
             throw std::runtime_error("The player you want to trade with doesn't have enough resources");
         }
     }
-     else if (functionName == "buyDevelopmentCard") {
+    else if (functionName == "buyDevelopmentCard") {
             // check if this is the start of the game the player cannot trade
             if (player->afterStartGame == false) {
             valid = false;
@@ -249,16 +252,12 @@ void Validator::validatePlayer() {
             }
         }  
     else if (functionName == "useDevelopmentCard") {
-        /* write all the conditions to use the development cards
-            5. Apply the effect of the card based on its specific rules.
-        */
-        // 1. Check if the card was not purchased this turn.
+        // Check if the card was not purchased this turn.
         if (player->parchaseDevelopmentCardThisTurn == true) {
             valid = false;
             throw std::runtime_error("You cannot use a development card that was purchased this turn.");
         }
     }
-
 }
 
 /*

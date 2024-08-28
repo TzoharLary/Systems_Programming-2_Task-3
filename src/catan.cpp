@@ -4,11 +4,16 @@
 #include <cstdlib>
 #include <ctime>
 
+std::vector<Player*> Catan::allPlayers;
+
 Catan::Catan(Player &p1, Player &p2, Player &p3, Board& board) : player1(p1), player2(p2), player3(p3), board(board), currentTurn(0), phase(FirstRound) {
     // ChooseStartingPlayer();
     currentPlayer = &player1;
     player1.setisMyTurn(true);
     std::srand(std::time(0));
+    allPlayers.push_back(&player1);
+    allPlayers.push_back(&player2);
+    allPlayers.push_back(&player3);
 }
 
 Board& Catan::getBoard() {
@@ -19,10 +24,13 @@ string Catan::getCurrentPlayerName() const {
     return currentPlayer->getName();
 }
 
-
 std::vector<Player*> Catan::getPlayers() {
-    return { &player1, &player2, &player3 };
+    return allPlayers;
+    // return { &player1, &player2, &player3 };
 }
+
+
+
 
 Player* Catan::getCurrentPlayer() const {
     return currentPlayer;
@@ -76,14 +84,18 @@ void Catan::advanceTurn() {
                 player2.setafterStartGame(true);
                 player3.setafterStartGame(true);
                 currentTurn = 0;
+                currentPlayer = &player1;
+                cout << "We start the game" << endl;
+                cout << "Now it's " << currentPlayer->getName() << "'s turn." << endl;
+                currentPlayer->setisMyTurn(true);
                 int cubeRoll = CubeRoll();
                 distributeResources(cubeRoll);
+                return;
             }
         }
     }
     // this is the regular play phase
     else {
-        cout << "We start the game" << endl;
         currentTurn = (currentTurn + 1) % 3;
         // distribute resources to players based on the cube roll
         distributeResources(CubeRoll());
@@ -101,13 +113,9 @@ void Catan::distributeResources(int rolledNumber){
         if (tile.getNumber() != rolledNumber){
             continue;
         }
-        cout << "the tile id is: " << tile.getId() << endl;
         for (const Vertex* vertex : tile.getVertices()) {
-            cout << "the vertex type is: " << vertex->getType() << endl;
             if (vertex->isOccupied()) {
-                cout << "the vertex id is: " << vertex->getId() << endl;
                 Player* PlayerOnThisTile = vertex->getPlayer();
-                cout << "the player name is: " << PlayerOnThisTile->getName() << endl;
                 if (vertex->getType() == Vertex::VertexType::SETTLEMENT) {
                     PlayerOnThisTile->addResource(tile.getResource(), 1);
                 } else if (vertex->getType() == Vertex::VertexType::CITY) {
@@ -140,15 +148,15 @@ bool Catan::isFirstRound() {
     
 }
 
-void Catan::printWinner() const {
-    if (player1.getPoints() >= 100) {
-        std::cout << "Winner: " << player1.getName() << std::endl;
-    } else if (player2.getPoints() >= 100) {
-        std::cout << "Winner: " << player2.getName() << std::endl;
-    } else if (player3.getPoints() >= 100) {
-        std::cout << "Winner: " << player3.getName() << std::endl;
-    } else {
-        std::cout << "No winner yet." << std::endl;
+void Catan::checkWinner() {
+    for (const auto& player : allPlayers) {
+        if(player->getPoints() >= 10){
+            cout << "The game is over and the winner is: " << player->getName() << "\n" << "This is the status of all the players in the game:" << endl;
+            for (const auto& p : allPlayers) {
+                p->status();
+            }
+            exit(0);
+        }
     }
 }
 

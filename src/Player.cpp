@@ -1,24 +1,25 @@
 #include "Player.hpp"
 #include "Tile.hpp"
+#include "catan.hpp"
 #include <vector>
 
 
 Player::Player(const string &name, Board& board) :   knightCount(0), victoryPoints(0), board(board), name(name), points(0), Citys(0) {
-    // for (int i = WOOD; i <= ORE; ++i) {
-    //     resources[static_cast<ResourceType>(i)] = 100;
-    // }
+    for (int i = WOOD; i <= ORE; ++i) {
+        resources[static_cast<ResourceType>(i)] = 100;
+    }
     
 }
 
 void Player::status() const {
     cout << "This is the status of: " << getName() << endl;
-    // cout << "Points: " << getPoints() << endl;
-    // cout << "Number of Cities: " << getNumOfCity() << endl;
-    // cout << "Number of Settlements: " << settlements.size() << endl;
-    // cout << "Number of Development Cards: " << developmentCards.size() << endl;
-    // cout << "Number of Knights: " << getKnightCount() << endl;
-    // cout << "Number of Victory Points: " << victoryPoints << endl;
-    // cout << "Number of Roads: " << getNumOfRoads() << endl;
+    cout << "Points: " << getPoints() << endl;
+    cout << "Number of Cities: " << getNumOfCity() << endl;
+    cout << "Number of Settlements: " << settlements.size() << endl;
+    cout << "Number of Development Cards: " << developmentCards.size() << endl;
+    cout << "Number of Knights: " << getKnightCount() << endl;
+    cout << "Number of Victory Points: " << victoryPoints << endl;
+    cout << "Number of Roads: " << getNumOfRoads() << endl;
 
     // print the resources of the player
     cout << "Resources:" << endl;
@@ -33,7 +34,7 @@ void Player::status() const {
     // } 
 
     // print the development cards that the player has
-    // printDevelopmentCards();
+    printDevelopmentCards();
 }
 
 void Player::Buy(BuyType type) {
@@ -156,9 +157,10 @@ void Player::placeSettlement(int vertexIndex) {
    
     vertex.setVertexProperties(Vertex::VertexType::SETTLEMENT, this);
     this->settlements.push_back(vertexIndex); // Add the settlement to the player's list of settlements
-    this -> incrementPoints(); // Settlement is worth 1 point
-    cout << "Player " << getName() << " increment points to " << getPoints() << endl;
+    cout << "Player " << getName() << " increment points to " << getPoints() << endl;  
     cout << name << " placed a settlement on vertex " << vertexIndex << endl;
+    this -> incrementPoints(); // Settlement is worth 1 point
+
 }
 
 void Player::placeRoad(int roadIndex) { 
@@ -213,19 +215,22 @@ void Player::upgradeSettlementToCity(int vertexIndex) {
     std::cout << "The player " << name << " upgraded a settlement to a city on vertex " << vertexIndex << std::endl;
 }
 
+
+/* Explanation of the function Trade:
+
+    This function performs the following actions:
+    1. Validates if the player can trade resources with another player using the Validator object.
+    2. If the validation fails, the function exits without making any changes.
+    3. If validation is successful, removes the specified amount of resources from the current player.
+    4. Adds the specified amount of resources to the other player.
+    5. Removes the specified amount of resources from the other player.
+    6. Adds the specified amount of resources to the current player.
+*/
 void Player::Trade(Player& player, ResourceType give, int giveAmount, ResourceType take, int takeAmount) {
     Validator validator("Player", "Trade", this, 0, board, give, giveAmount, take, takeAmount, &player);
     if (!validator.isValid()) {
         return;
     }
-
-
-  
-    // // check if the player has the resources to trade
-    // std::map<ResourceType, int> cost = { {give, giveAmount} };
-    // if (!checkResources(cost)) {
-    //     throw std::runtime_error("Not enough resources to trade.");
-    // }
 
     // remove the resources from the player
     this->removeResource(give, giveAmount);
@@ -266,6 +271,7 @@ void Player::incrementNumOfCity() {
 
 void Player::incrementPoints() {
     points++;
+    Catan::checkWinner();
 }
 
 string Player::getName() const {
@@ -381,37 +387,36 @@ void Player::buyDevelopmentCard() {
     }
     Buy(Player::BuyType::DEVELOPMENT_CARD);
     auto& deck = board.getDeck();
-
     // Add the card to the player's hand in random order
     addDevelopmentCard(std::move(deck.back()));
     // Remove the card from the deck for no one else to get it anymore
     deck.pop_back();
     setPurchaseDevelopmentCardThisTurn(true);
-
-
 }
 
 void Player::addDevelopmentCard(std::unique_ptr<DevelopmentCard> card) {
     // if condition to check if the card is victory point
     // if this is the case, use the methos useDevelopmentCard and insert 
     // the command "VictoryPoint" to implement the victory point through the method.
-    if (card->getType() == "VictoryPoint") {
+    if (card->getType() == "VictoryPoint" ){
         developmentCards.push_back(std::move(card));
+        auto& lastCard = developmentCards.back();
+        cout << "The Development Card you bought is: " << lastCard->getType() << endl;
         useDevelopmentCard("VictoryPoint");
         return;
-    }else{
-        developmentCards.push_back(std::move(card));
-
     }
+    if (card->getType() == "YearOfPlenty" ){
+        setPurchaseDevelopmentCardThisTurn(false);
+    }
+    developmentCards.push_back(std::move(card));
+    auto& lastCard = developmentCards.back();
+    cout << "The Development Card you bought is: " << lastCard->getType() << endl;
 }
 
 void Player::useDevelopmentCard(const std::string& command) {
-    Validator validator("Player", "useDevelopmentCard", this, -1, board, ResourceType::WOOD, 0, ResourceType::BRICK, 0, nullptr);
     
-    // add check if the parameters are valid - is string
 
     // Breaks the string into words (tokens) using a default separator (space).
-    
     // Used istringstream to easily parse and manipulate the string content into separate tokens.
     // Using istringstream helps to separate the words in a string very easily
     istringstream iss(command);
@@ -436,12 +441,22 @@ void Player::useDevelopmentCard(const std::string& command) {
         cout << "No such card available." << endl;
         return;
     }
+    // i hace to check if this is an YearOfPlenty card, because if it is, the player allowd to use it in the same turn.
+    // hence, i have to set the purchaseDevelopmentCardThisTurn to false, and move the validator down for check the command.
+    if (cardType == "YearOfPlenty" || cardType == "VictoryPoint") {
+        setPurchaseDevelopmentCardThisTurn(false);
+    }
+    Validator validator("Player", "useDevelopmentCard", this, -1, board, ResourceType::WOOD, 0, ResourceType::BRICK, 0, nullptr);
+    if (!validator.isValid()) {
+        return;
+    }
     // If the card type is "Monopoly" and there are two parameters in the command.
     if (cardType == "Monopoly" && tokens.size() == 2) {
         try {
         ResourceType resource = stringToResourceType(tokens[1]);
         (*it)->applyBenefit(this, std::vector<ResourceType>{resource});
-        developmentCards.erase(it);
+        // check why i do twice erase to the card
+        // developmentCards.erase(it);
         } 
         catch(const std::exception& e) {
             std::cerr << "The resource specified in the command does not exist." << std::endl;
@@ -461,12 +476,9 @@ void Player::useDevelopmentCard(const std::string& command) {
     else if (cardType == "RoadBuilding" && tokens.size() == 3) {
         try {
             setUsingRoadBuildingCard(true);
-            cout << "Road Building card" << endl;
             int roadIndex1 = std::stoi(tokens[1]);
             int roadIndex2 = std::stoi(tokens[2]);
             cout << "Road 1: " << roadIndex1 << " Road 2: " << roadIndex2 << endl;
-
-
             (*it)->applyBenefit(this, std::make_pair(roadIndex1, roadIndex2));
         } catch(const std::exception& e) {
             std::cout << "Invalid road indices specified in the command." << std::endl;
@@ -474,6 +486,7 @@ void Player::useDevelopmentCard(const std::string& command) {
     } else if (cardType == "Knight") {
         (*it)->applyBenefit(this, std::make_pair(0, 0));
     } else if (cardType == "VictoryPoint") {
+        // cout << "if the answer is 0, the player has not buy the card this turn. \nif the answer is 1 he did: " << parchaseDevelopmentCardThisTurn << endl;
         (*it)->applyBenefit(this, std::make_pair(0, 0));
     } else {
         std::cerr << "Invalid command format." << std::endl;

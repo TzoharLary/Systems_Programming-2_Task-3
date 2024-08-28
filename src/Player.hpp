@@ -35,7 +35,7 @@ using std::find;
 using std::out_of_range;
 using std::unique_ptr;
 
-class catan;
+// class Catan;
 
 class Player {
 
@@ -50,6 +50,9 @@ private:
     *  resources: Map that holds the player's resources and the amount of each resource
     *  settlements: The index of the settlements the player has
     *  Citys: The number of cities the player has
+    *  Comment:  The reason that we have a vector of settlements and not a number
+    *            is that we need to use it for remove the settlement to built their a city
+    *            and that's why we need only the number of the city.
     *  usingRoadBuildingCard: A bool value to determine if the player is using a road building card or not
     */
     vector<unique_ptr<DevelopmentCard>> developmentCards;   
