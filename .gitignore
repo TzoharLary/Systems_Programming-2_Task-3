@@ -17,7 +17,8 @@ core
 
 # Ignore icon files
 icon
-icon?
+Icon?
+Icon
 src/icon
 
 
@@ -29,6 +30,8 @@ src/icon
 
 # Ignore Mac-specific files
 *.DS_Store
+.DS_Store
+
 
 # Ignore Visual Studio Code files
 Doxfile
