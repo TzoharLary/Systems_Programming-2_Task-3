@@ -55,6 +55,7 @@ private:
     *            and that's why we need only the number of the city.
     *  usingRoadBuildingCard: A bool value to determine if the player is using a road building card or not
     */
+    enum BuyType { ROAD, SETTLEMENT, CITY, DEVELOPMENT_CARD };
     vector<unique_ptr<DevelopmentCard>> developmentCards;   
     map<string, int> cardCounts;
     int knightCount;
@@ -66,14 +67,16 @@ private:
     vector<int> settlements; 
     int Citys; 
     bool usingRoadBuildingCard = false;
-    enum BuyType { ROAD, SETTLEMENT, CITY, DEVELOPMENT_CARD };
-    void Buy(BuyType type);
     bool isMyTurn = false;
-    bool afterStartGame = false;  
     bool parchaseDevelopmentCardThisTurn = false; 
-    void setafterStartGame(bool value);
+    vector<bool> purchaseYOPThisTurn = {false, false};
+    vector<bool> roundStatus = {false, false, false};
     void setisMyTurn(bool value);
     void setPurchaseDevelopmentCardThisTurn(bool value);
+    void setPurchaseYOPThisTurn(const vector<bool>& value);
+    void setRoundStatus(const vector<bool>& newStatus);
+    void Buy(BuyType type);
+    void handleError(const std::exception& e);
     /* Resource functions with explanations:
     *  removeResource: Remove resources from the player
     *  checkResources: Helper function to check if the player has enough resources to buy something
@@ -167,10 +170,15 @@ public:
     int getNumOfCity() const;
     int getNumOfRoads() const;
     int getNumOfSettlements() const;
-    bool getIsAfterStartGame();
+    vector<int> getSettlements() const;
+    vector<bool> getRoundStatus();
+    int getNumOfDevelopmentCards() const;
+    int getNumOfVictoryPoints() const;
+    // declaration of get method that return the development cards that the player has
+    const vector<unique_ptr<DevelopmentCard>>& getDevelopmentCards() const;
+    vector<bool> getPurchaseYOPThisTurn() const;
 
 
-    // i leave for now this function in public for test myself in the main
 };
 
 #endif // PLAYER_HPP

@@ -3,7 +3,9 @@
 
 #include <string>
 #include "Board.hpp"
+
 using std::string;
+
 
 class Player;
 class Road;
@@ -27,7 +29,7 @@ private:
     int takeAmount;
     Player* otherPlayer;
     void validate(); // Validates objects based on their class type
-
+    void handleError(const std::exception& e); // Handles exceptions thrown during validation
     // The Board class need to access to method validatePlayer.
     friend class Board;
   

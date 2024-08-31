@@ -14,20 +14,7 @@ int main() {
     Player p3("Dana", board);
     Catan catan(p1, p2, p3, board);
 
-    /* test for place a road not connected to a settlement 
-    // 1. place a road near nothing
-    p1.placeRoad(1);
 
-    2. place a road near a settlement that not  belong to the player
-    p1.placeSettlement(2);
-    p2.placeRoad(1);
-    */
-
-    /* test for place a road not near anothe road of the player
-            p1.placeSettlement(2);
-            p1.placeRoad(1);
-            p2.placeRoad(0);
-    */
 
     // some code for starting the game
     p1.placeSettlement(10);
@@ -42,39 +29,60 @@ int main() {
     p3.placeSettlement(23);
     p3.placeRoad(20);
     catan.advanceTurn();
-    p2.placeSettlement(30);
-    p2.placeRoad(26);
+    p2.placeSettlement(29);
+    p2.placeRoad(28);
     catan.advanceTurn();
     p1.placeSettlement(35);
     p1.placeRoad(66);
-    // p1.status();
-    // p2.status();
-    // p3.status();
+
     // the game start and now the turn advance to Amit
+    catan.advanceTurn();
     catan.advanceTurn();
 
     // here Amit can do whatever he want to do
-    p1.status();
-    for (int i = 0; i < 25; i++) {
-        p1.buyDevelopmentCard();   
-    }
+
+
+    // p1.placeSettlement(46);
+    // p1.placeSettlement(53);
+    // p1.placeSettlement(510);
+    // p1.placeSettlement(49);
+
+    // p1.status();
+    // for (int i = 0; i < 25; i++) {
+    //     p1.buyDevelopmentCard();   
+    // }
 
     // Amit end hi's turn and Yossi start his turn
-    catan.advanceTurn();
+    // catan.advanceTurn();
 
     // here Yossi can wathever he want to do
 
     // Yossi end hi's turn and Dana start his turn
-    catan.advanceTurn();
+    // catan.advanceTurn();
 
     // here Dana can wathever he want to do
 
-    catan.advanceTurn();
+    // catan.advanceTurn();
 
     
 
     // here Amit can wathever he want to do
 
+
+    /* test for place a road not connected to a settlement 
+    // 1. place a road near nothing
+    p1.placeRoad(1);
+
+    2. place a road near a settlement that not  belong to the player
+    p1.placeSettlement(2);
+    p2.placeRoad(1);
+    */
+
+    /* test for place a road not near anothe road of the player
+            p1.placeSettlement(2);
+            p1.placeRoad(1);
+            p2.placeRoad(0);
+    */
 
 
     /* buy for the player all the development card

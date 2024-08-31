@@ -23,14 +23,13 @@ void Board::setup() {
     createVertices();
     createTiles();
     createDevelopmentCards();
+    buildVertexToRoadsMap();
 }
 
 void Board::createRoads() {
     for (int i = 0; i < 72; ++i) {
-         // We used emplace() instead of insert() because 
-        // we want to construct the Road object in place
-        // and avoid copying it from a temporary object
-        roads.emplace_back(i); 
+        Road r(i);
+        roads.push_back(r);
     }
     // create the vertices that the road is connected to
     roads[0].setBetweenVertices({0, 1});
@@ -182,8 +181,8 @@ void Board::createRoads() {
 
 void Board::createVertices() {
     for (int i = 0; i < 54; i++) { 
-        Vertex v(i);          // יצירת אובייקט Vertex עם id
-        vertices.push_back(v);  // הוספת האובייקט ל-vector עם העתקה
+        Vertex v(i);       
+        vertices.push_back(v);  
     }
     // create the adjacent vertices for each vertex
     vertices[0].setAdjacentVertices({1, 8});
@@ -302,6 +301,14 @@ void Board::createDevelopmentCards() {
     shuffle(developmentCards.begin(), developmentCards.end(), g);
 }
 
+void Board::buildVertexToRoadsMap() {
+    for (const Road& road : roads) {
+        for (int vertexId : road.getBetweenVertices()) {
+            vertexToRoadsMap[vertexId].push_back(&road);
+        }
+    }
+}
+
 /* Explanation of the function addTile:
 *  1. The purpose of the function addTile is to add a new tile to the board.
 *  2. This function performs the following actions:
@@ -386,7 +393,13 @@ Vertex Board::getVertex(int index) const {
     return vertices[index];
 }
 
-
+vector<const Road*> Board::getRoadsOnVertex(int vertexId) const {
+        auto it = vertexToRoadsMap.find(vertexId);
+        if (it != vertexToRoadsMap.end()) {
+            return it->second;
+        }
+        return {};
+    }
 
 /* Functions for test purposes:
 

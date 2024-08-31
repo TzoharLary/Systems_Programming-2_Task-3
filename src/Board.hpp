@@ -27,6 +27,7 @@ using std::unique_ptr;
 using std::make_unique;
 using std::shuffle;
 using std::unique_ptr;
+using std::unordered_map;
 
 class Player;
 
@@ -36,11 +37,13 @@ private:
     vector<Tile> tiles;
     vector<Vertex> vertices;
     vector<Road> roads;
+    unordered_map<int, vector<const Road*>> vertexToRoadsMap;
     void addTile(int id, ResourceType resource, int number, const vector<int> indexOfVerticesOfTile, const vector<int>& adjacentTiles);
     void createRoads(); 
     void createVertices();
     void createTiles();
     void createDevelopmentCards();
+    void buildVertexToRoadsMap();
     void setup();
     template <typename T>
     void printVector(const vector<T>& vec) const {
@@ -61,6 +64,14 @@ private:
 public:
     Board();
     vector<Tile*> getTilesForVertex(int vertexIndex);
+
+    /*  Some comment about the functions getAllTiles, getRoads, and getAllVertices:
+        This methods for get all the tiles, roads, and vertices
+        are return a value and not a reference 
+        because we don't want to change the value of the tiles, roads, and vertices
+        hence,  we use these methods, it will be in these commands:
+        vector<Tile> tiles = board.getAllTiles(); and not vector<Tile>& tiles = board.getAllTiles();
+    */
     vector<Tile> getAllTiles() const;
     vector<Road> getRoads() const;
     vector<Vertex> getAllVertices() const;
@@ -71,6 +82,7 @@ public:
     vector<int> getAdjacentVertices(int vertexIndex) const;
     void printAdjacent(int index, bool isTile) const;
     vector<int> getAdjacentVertices(int vertexIndex);
+    vector<const Road*> getRoadsOnVertex(int vertexId) const;
 };
 
 #endif // BOARD_HPP

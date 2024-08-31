@@ -11,13 +11,18 @@ using std::time;
 vector<Player*> Catan::allPlayers;
 
 Catan::Catan(Player &p1, Player &p2, Player &p3, Board& board) : player1(p1), player2(p2), player3(p3), board(board), currentTurn(0), phase(FirstRound) {
-    // ChooseStartingPlayer();
     currentPlayer = &player1;
     player1.setisMyTurn(true);
     srand(time(0));
-    allPlayers.push_back(&player1);
-    allPlayers.push_back(&player2);
-    allPlayers.push_back(&player3);
+    allPlayers.clear();
+    if(allPlayers.size() < 3){
+        allPlayers.push_back(&player1);
+        allPlayers.push_back(&player2);
+        allPlayers.push_back(&player3);
+    }
+    for(Player* player : allPlayers){
+        player->setRoundStatus({true, false, false});
+    }
 }
 
 Board& Catan::getBoard() {
@@ -30,21 +35,19 @@ string Catan::getCurrentPlayerName() const {
 
 vector<Player*> Catan::getPlayers() {
     return allPlayers;
-    // return { &player1, &player2, &player3 };
 }
-
-
-
 
 Player* Catan::getCurrentPlayer() const {
     return currentPlayer;
 }
+
 
 int Catan::CubeRoll() {
     int roll = (rand() % 12) + 2;
     cout << "The cube rolled: " << roll << endl;
     return roll;
 }
+
 
 
 /* Explanation of the advanceTurn method:
@@ -74,6 +77,9 @@ void Catan::advanceTurn() {
             currentTurn++;
             if (currentTurn == 3) {
                 phase = SecondRound;
+                for(Player* player : allPlayers){
+                    player->setRoundStatus({false, true, false});
+                }
                 // We want the next turn to be the last player's. (Dana)
                 currentTurn = 2;
             }
@@ -84,9 +90,9 @@ void Catan::advanceTurn() {
             currentTurn--;
             if (currentTurn < 0) {
                 phase = RegularPlay;
-                player1.setafterStartGame(true);
-                player2.setafterStartGame(true);
-                player3.setafterStartGame(true);
+                for(Player* player : allPlayers){
+                    player->setRoundStatus({false, false, true});
+                }
                 currentTurn = 0;
                 currentPlayer = &player1;
                 cout << "We start the game" << endl;
@@ -102,11 +108,17 @@ void Catan::advanceTurn() {
     else {
         currentTurn = (currentTurn + 1) % 3;
         // distribute resources to players based on the cube roll
+        currentPlayer = (currentTurn == 0) ? &player1 : (currentTurn == 1) ? &player2 : &player3;
+        // set the current player to their turn
+        currentPlayer->setisMyTurn(true);
+        cout << "Now it's " << currentPlayer->getName() << "'s turn." << endl;
         distributeResources(CubeRoll());
+        return;
     }
     currentPlayer = (currentTurn == 0) ? &player1 : (currentTurn == 1) ? &player2 : &player3;
     // set the current player to their turn
     currentPlayer->setisMyTurn(true);
+    currentPlayer->setPurchaseYOPThisTurn({false, false});
     cout << "Now it's " << currentPlayer->getName() << "'s turn." << endl;
 }
 
@@ -136,20 +148,14 @@ void Catan::distributeResources(int rolledNumber){
 /* if FirstRound explanation:
 *  if all players together have less than 7 points and less than 7 roads, then it is the first round.
 *  if not, then it is not the first round
-*  set all players to afterStartGame because the first round is over
 */
 bool Catan::isFirstRound() {
-    if ((player1.getPoints() + player2.getPoints() + player3.getPoints() < 7) && (player1.getNumOfRoads() + player2.getNumOfRoads() + player3.getNumOfRoads() < 7)) {
+    if ((player1.getPoints() + player2.getPoints() + player3.getPoints() < 7) && (player1.getNumOfRoads() + player2.getNumOfRoads() + player3.getNumOfRoads() < 7) && (phase != RegularPlay)) {
         return true;
     }
     else{
-        player1.setafterStartGame(true);
-        player2.setafterStartGame(true);
-        player3.setafterStartGame(true);
         return false;
-    }
-    
-    
+    } 
 }
 
 void Catan::checkWinner() {
