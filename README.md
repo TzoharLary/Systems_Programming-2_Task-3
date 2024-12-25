@@ -43,4 +43,4 @@ Manages the overall game flow including turn-taking and determining the winner.
 - Google Test (for unit tests)
 
 ## Contact
-For any questions, please contact [your_email@example.com].
+For any questions, please contact [tzohary1234@gmail.com].
